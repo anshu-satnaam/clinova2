@@ -1,0 +1,251 @@
+// This is the Prisma schema for Clinova Healthcare AI Platform
+// HIPAA, DPDP, ISO 27001 compliant data model
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  PATIENT
+  DOCTOR
+  ADMIN
+  NURSE
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AuditAction {
+  READ
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  EXPORT
+  AI_QUERY
+  VOICE_SESSION
+  FHIR_ACCESS
+}
+
+enum ConsentStatus {
+  GRANTED
+  REVOKED
+  PENDING
+}
+
+enum AISafetyStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  FLAGGED
+}
+
+// ── Users (Patients + Providers + Admins) ─────────────────────────────────────
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  role          UserRole @default(PATIENT)
+  firstName     String   @map("first_name")
+  lastName      String   @map("last_name")
+  phone         String?
+  isActive      Boolean  @default(true) @map("is_active")
+  mfaEnabled    Boolean  @default(false) @map("mfa_enabled")
+  mfaSecret     String?  @map("mfa_secret")
+  lastLoginAt   DateTime? @map("last_login_at")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at") // GDPR soft delete
+
+  // Relations
+  patientProfile  Patient?
+  doctorProfile   Doctor?
+  refreshTokens   RefreshToken[]
+  auditLogs       AuditLog[]
+  consentRecords  ConsentRecord[]
+  aiSessions      AISession[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  isRevoked Boolean  @default(false) @map("is_revoked")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+// ── Patient ───────────────────────────────────────────────────────────────────
+
+model Patient {
+  id            String    @id @default(uuid())
+  userId        String    @unique @map("user_id")
+  dateOfBirth   DateTime? @map("date_of_birth")
+  gender        String?
+  bloodType     String?   @map("blood_type")
+  allergies     String[]
+  fhirPatientId String?   @unique @map("fhir_patient_id") // FHIR Patient resource ID
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id])
+  appointments Appointment[]
+  voiceSessions VoiceSession[]
+
+  @@map("patients")
+}
+
+// ── Doctor ────────────────────────────────────────────────────────────────────
+
+model Doctor {
+  id             String   @id @default(uuid())
+  userId         String   @unique @map("user_id")
+  licenseNumber  String   @unique @map("license_number")
+  specialization String
+  department     String?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id])
+  appointments Appointment[]
+  aiSessions   AISession[]
+
+  @@map("doctors")
+}
+
+// ── Appointments ──────────────────────────────────────────────────────────────
+
+model Appointment {
+  id          String            @id @default(uuid())
+  patientId   String            @map("patient_id")
+  doctorId    String            @map("doctor_id")
+  scheduledAt DateTime          @map("scheduled_at")
+  status      AppointmentStatus @default(SCHEDULED)
+  notes       String?
+  isTelemedicine Boolean        @default(false) @map("is_telemedicine")
+  liveKitRoomId String?         @map("livekit_room_id")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+
+  @@map("appointments")
+}
+
+// ── FHIR Resources (JSONB storage) ───────────────────────────────────────────
+
+model FhirResource {
+  id           String   @id @default(uuid())
+  resourceType String   @map("resource_type")
+  fhirId       String   @unique @map("fhir_id")
+  patientFhirId String? @map("patient_fhir_id")
+  data         Json     // FHIR resource JSON
+  version      Int      @default(1)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([resourceType])
+  @@index([patientFhirId])
+  @@map("fhir_resources")
+}
+
+// ── AI Sessions (LangGraph workflow tracking) ─────────────────────────────────
+
+model AISession {
+  id            String         @id @default(uuid())
+  userId        String         @map("user_id")
+  doctorId      String?        @map("doctor_id")
+  workflowType  String         @map("workflow_type")
+  inputData     Json           @map("input_data")
+  outputData    Json?          @map("output_data")
+  safetyStatus  AISafetyStatus @default(PENDING_REVIEW) @map("safety_status")
+  doctorApproved Boolean       @default(false) @map("doctor_approved")
+  promptLog     String?        @map("prompt_log")     // ISO 42001: prompt logging
+  modelVersion  String?        @map("model_version")  // ISO 42001: model version tracking
+  hallucinationScore Float?    @map("hallucination_score")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  user   User    @relation(fields: [userId], references: [id])
+  doctor Doctor? @relation(fields: [doctorId], references: [id])
+
+  @@map("ai_sessions")
+}
+
+// ── Voice Sessions ────────────────────────────────────────────────────────────
+
+model VoiceSession {
+  id              String   @id @default(uuid())
+  patientId       String   @map("patient_id")
+  liveKitRoomId   String   @map("livekit_room_id")
+  transcription   String?
+  fhirFormatted   Json?    @map("fhir_formatted")
+  aiSummary       String?  @map("ai_summary")
+  consentGiven    Boolean  @default(false) @map("consent_given")
+  durationSeconds Int?     @map("duration_seconds")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  patient Patient @relation(fields: [patientId], references: [id])
+
+  @@map("voice_sessions")
+}
+
+// ── Audit Logs (HIPAA + ISO 42001 compliant) ─────────────────────────────────
+
+model AuditLog {
+  id          String      @id @default(uuid())
+  userId      String      @map("user_id")
+  action      AuditAction
+  resource    String
+  resourceId  String?     @map("resource_id")
+  ipAddress   String?     @map("ip_address")
+  userAgent   String?     @map("user_agent")
+  metadata    Json?
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ── Consent Records (DPDP Act 2023 + GDPR) ───────────────────────────────────
+
+model ConsentRecord {
+  id          String        @id @default(uuid())
+  userId      String        @map("user_id")
+  consentType String        @map("consent_type") // voice_recording, data_processing, etc.
+  status      ConsentStatus @default(PENDING)
+  grantedAt   DateTime?     @map("granted_at")
+  revokedAt   DateTime?     @map("revoked_at")
+  ipAddress   String?       @map("ip_address")
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("consent_records")
+}

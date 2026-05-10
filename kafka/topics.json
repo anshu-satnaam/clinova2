@@ -1,0 +1,79 @@
+{
+  "topics": [
+    {
+      "name": "patient.created",
+      "description": "Fired when a new patient is registered via FHIR service",
+      "partitions": 3,
+      "replication_factor": 1,
+      "producer": "fhir-service",
+      "consumers": ["audit-service", "ai-service"],
+      "schema": {
+        "fhir_id": "string",
+        "name": "object",
+        "created_at": "ISO8601 datetime"
+      }
+    },
+    {
+      "name": "audit.started",
+      "description": "Fired when a clinical audit workflow is initiated",
+      "partitions": 3,
+      "replication_factor": 1,
+      "producer": "ai-service",
+      "consumers": ["audit-service"],
+      "schema": {
+        "session_id": "string",
+        "patient_id": "string",
+        "user_id": "string",
+        "workflow_type": "string",
+        "timestamp": "ISO8601 datetime"
+      }
+    },
+    {
+      "name": "transcription.completed",
+      "description": "Fired when Deepgram STT completes voice transcription",
+      "partitions": 3,
+      "replication_factor": 1,
+      "producer": "voice-service",
+      "consumers": ["audit-service", "ai-service"],
+      "schema": {
+        "session_id": "string",
+        "patient_id": "string",
+        "transcript": "string",
+        "confidence": "float",
+        "duration_seconds": "float",
+        "timestamp": "ISO8601 datetime"
+      }
+    },
+    {
+      "name": "diagnosis.generated",
+      "description": "Fired when AI generates a differential diagnosis or clinical assessment",
+      "partitions": 3,
+      "replication_factor": 1,
+      "producer": "ai-service",
+      "consumers": ["audit-service", "gateway-service"],
+      "schema": {
+        "session_id": "string",
+        "patient_id": "string",
+        "risk_level": "LOW | MEDIUM | HIGH | CRITICAL",
+        "requires_doctor_approval": "boolean",
+        "icd_codes": "array",
+        "timestamp": "ISO8601 datetime"
+      }
+    },
+    {
+      "name": "device.data.received",
+      "description": "Fired when IoT medical device data is ingested",
+      "partitions": 3,
+      "replication_factor": 1,
+      "producer": "fhir-service",
+      "consumers": ["audit-service", "ai-service"],
+      "schema": {
+        "device_id": "string",
+        "patient_id": "string",
+        "device_type": "string",
+        "readings": "object",
+        "timestamp": "ISO8601 datetime"
+      }
+    }
+  ]
+}

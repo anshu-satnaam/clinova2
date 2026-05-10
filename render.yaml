@@ -1,0 +1,162 @@
+services:
+  # ── NestJS API Gateway ──────────────────────────────────────
+  - type: web
+    name: clinova-gateway
+    runtime: docker
+    dockerfilePath: ./backend/gateway-service/Dockerfile
+    dockerContext: ./backend/gateway-service
+    plan: starter
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 15m
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: AI_SERVICE_URL
+        fromService:
+          name: clinova-ai
+          type: web
+          property: host
+      - key: FHIR_SERVICE_URL
+        fromService:
+          name: clinova-fhir
+          type: web
+          property: host
+      - key: VOICE_SERVICE_URL
+        fromService:
+          name: clinova-voice
+          type: web
+          property: host
+      - key: AUDIT_SERVICE_URL
+        fromService:
+          name: clinova-audit
+          type: web
+          property: host
+      - key: KAFKA_BROKER_URL
+        sync: false
+      - key: KAFKA_USERNAME
+        sync: false
+      - key: KAFKA_PASSWORD
+        sync: false
+
+  # ── FastAPI AI Service ──────────────────────────────────────
+  - type: web
+    name: clinova-ai
+    runtime: docker
+    dockerfilePath: ./backend/ai-service/Dockerfile
+    dockerContext: ./backend/ai-service
+    plan: standard
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: MISTRAL_MODEL
+        value: mistral-medium-latest
+      - key: CHROMA_HOST
+        fromService:
+          name: clinova-chromadb
+          type: web
+          property: host
+      - key: CHROMA_PORT
+        value: "8000"
+      - key: KAFKA_BROKER_URL
+        sync: false
+      - key: KAFKA_USERNAME
+        sync: false
+      - key: KAFKA_PASSWORD
+        sync: false
+
+  # ── FastAPI FHIR Service ────────────────────────────────────
+  - type: web
+    name: clinova-fhir
+    runtime: docker
+    dockerfilePath: ./backend/fhir-service/Dockerfile
+    dockerContext: ./backend/fhir-service
+    plan: starter
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: KAFKA_BROKER_URL
+        sync: false
+      - key: KAFKA_USERNAME
+        sync: false
+      - key: KAFKA_PASSWORD
+        sync: false
+
+  # ── FastAPI Voice Service ───────────────────────────────────
+  - type: web
+    name: clinova-voice
+    runtime: docker
+    dockerfilePath: ./backend/voice-service/Dockerfile
+    dockerContext: ./backend/voice-service
+    plan: starter
+    envVars:
+      - key: LIVEKIT_URL
+        sync: false
+      - key: LIVEKIT_API_KEY
+        sync: false
+      - key: LIVEKIT_API_SECRET
+        sync: false
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      - key: CARTESIA_API_KEY
+        sync: false
+      - key: CARTESIA_VOICE_ID
+        sync: false
+      - key: KAFKA_BROKER_URL
+        sync: false
+      - key: KAFKA_USERNAME
+        sync: false
+      - key: KAFKA_PASSWORD
+        sync: false
+
+  # ── FastAPI Audit Service ───────────────────────────────────
+  - type: web
+    name: clinova-audit
+    runtime: docker
+    dockerfilePath: ./backend/audit-service/Dockerfile
+    dockerContext: ./backend/audit-service
+    plan: starter
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: KAFKA_BROKER_URL
+        sync: false
+      - key: KAFKA_USERNAME
+        sync: false
+      - key: KAFKA_PASSWORD
+        sync: false
+      - key: AUDIT_RETENTION_DAYS
+        value: "2555"
+
+  # ── ChromaDB ────────────────────────────────────────────────
+  - type: web
+    name: clinova-chromadb
+    runtime: docker
+    dockerfilePath: ./infra/docker/chromadb/Dockerfile
+    dockerContext: ./infra/docker/chromadb
+    plan: starter
+    disk:
+      name: chroma-data
+      mountPath: /chroma/chroma
+      sizeGB: 10
+
+  # ── Next.js Frontend ────────────────────────────────────────
+  - type: web
+    name: clinova-frontend
+    runtime: docker
+    dockerfilePath: ./frontend/nextjs-app/Dockerfile
+    dockerContext: ./frontend/nextjs-app
+    plan: starter
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          name: clinova-gateway
+          type: web
+          property: host

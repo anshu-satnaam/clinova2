@@ -1,0 +1,32 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+
+# LiveKit
+livekit==0.11.1
+livekit-api==0.6.0
+
+# Deepgram STT
+deepgram-sdk==3.2.7
+
+# Cartesia TTS
+httpx==0.26.0
+aiohttp==3.9.1
+
+# Kafka
+kafka-python==2.0.2
+
+# WebSocket
+websockets==12.0
+
+# Security
+python-jose[cryptography]==3.3.0
+cryptography==41.0.7
+
+# Utilities
+python-multipart==0.0.6
+orjson==3.9.10
+structlog==24.1.0
+prometheus-fastapi-instrumentator==6.1.0

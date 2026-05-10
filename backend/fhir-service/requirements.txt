@@ -1,0 +1,30 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+
+# Database
+asyncpg==0.29.0
+sqlalchemy[asyncio]==2.0.25
+alembic==1.13.1
+
+# HL7 / FHIR
+fhir.resources==7.1.0
+hl7==0.4.5
+
+# Kafka
+kafka-python==2.0.2
+
+# HTTP Client
+httpx==0.26.0
+
+# Security
+python-jose[cryptography]==3.3.0
+cryptography==41.0.7
+
+# Utilities
+python-multipart==0.0.6
+orjson==3.9.10
+structlog==24.1.0
+prometheus-fastapi-instrumentator==6.1.0
