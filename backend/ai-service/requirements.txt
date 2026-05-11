@@ -1,4 +1,6 @@
-# Clinova AI Service
+# Clinova AI Service — CPU Optimized
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 fastapi
 uvicorn[standard]
 pydantic>=2.0
@@ -11,16 +13,20 @@ langchain
 langchain-mistralai
 mistralai
 
-# Database
+# Database & Vector (CPU Only)
 asyncpg
 sqlalchemy[asyncio]
 alembic
 chromadb
 sentence-transformers
+torch==2.5.1+cpu
+torchaudio==2.5.1+cpu
+torchvision==0.20.1+cpu
 
 # Conflict Fixes
 tokenizers>=0.22.0,<=0.23.0
 protobuf<6.0
+httpx<0.28.0
 
 # Messaging
 kafka-python
@@ -34,4 +40,3 @@ prometheus-fastapi-instrumentator
 python-jose[cryptography]
 passlib[bcrypt]
 cryptography
-httpx<0.28.0
