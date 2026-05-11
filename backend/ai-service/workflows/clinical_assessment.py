@@ -17,7 +17,7 @@ try:
     from dotenv import load_dotenv
     import pathlib
     env_path = pathlib.Path(__file__).parent.parent / '.env'
-    load_dotenv(dotenv_path=env_path, override=True)
+    load_dotenv(dotenv_path=env_path, override=False)
     logger.info("env_loaded", path=str(env_path))
 except Exception as e:
     logger.warning("env_load_failed", error=str(e))

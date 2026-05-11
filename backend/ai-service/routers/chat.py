@@ -13,7 +13,7 @@ import pathlib
 
 # Load env
 env_path = pathlib.Path(__file__).parent.parent / '.env'
-load_dotenv(dotenv_path=env_path, override=True)
+load_dotenv(dotenv_path=env_path, override=False)
 
 from workflows.clinical_assessment import clinical_assessment_graph
 from services.chromadb_service import ChromaService
