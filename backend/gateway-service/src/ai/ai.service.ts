@@ -25,8 +25,10 @@ export class AiService {
         headers: { 'Content-Type': 'application/json' },
       });
       return res.data;
-    } catch (e) {
-      throw new Error(`AI service error: ${e.response?.data?.detail || e.message}`);
+    } catch (e: any) {
+      console.error('AI Proxy Error:', e.response?.data || e.message);
+      const detail = e.response?.data?.detail || e.message;
+      throw new Error(`AI service error: ${detail}`);
     }
   }
 
