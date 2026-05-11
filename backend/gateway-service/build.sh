@@ -2,11 +2,8 @@
 # ── Clinova Gateway Build Script ─────────────────────────────
 set -e 
 
-echo "📦 Installing core dependencies..."
+echo "📦 Installing dependencies..."
 npm install
-
-echo "🛠️ Installing NestJS CLI explicitly..."
-npm install @nestjs/cli @nestjs/schematics
 
 echo "💎 Generating Prisma client..."
 npx prisma generate
@@ -18,7 +15,7 @@ echo "🌱 Seeding database..."
 npx ts-node prisma/seed.ts
 
 echo "🏗️ Building NestJS application..."
-# Using the installed CLI to build
-./node_modules/.bin/nest build
+# Force npx to use the @nestjs/cli package specifically
+npx -p @nestjs/cli nest build
 
 echo "✅ Build complete!"
