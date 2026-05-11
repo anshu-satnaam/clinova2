@@ -50,7 +50,7 @@ app.add_middleware(
 )
 
 # ── Routes ───────────────────────────────────────────────────────────────────
-@app.get("/")
+@app.get("/", methods=["GET", "HEAD"])
 async def root():
     return {
         "status": "online",
@@ -59,7 +59,7 @@ async def root():
         "message": "AI Core is live and processing clinical workflows."
     }
 
-@app.get("/health")
+@app.get("/health", methods=["GET", "HEAD"])
 async def health():
     return {"status": "healthy"}
 
@@ -72,9 +72,6 @@ app.include_router(search.router,    prefix="/api/ai", tags=["search"])
 app.include_router(workflow.router,  prefix="/api/ai", tags=["workflow"])
 
 
-@app.get("/health", tags=["health"])
-async def health():
-    return {"status": "healthy", "service": "clinova-ai-service", "version": "1.0.0"}
 
 
 @app.exception_handler(Exception)
