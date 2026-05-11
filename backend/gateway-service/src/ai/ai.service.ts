@@ -11,7 +11,11 @@ export class AiService {
   ) {}
 
   private get aiServiceUrl() {
-    return this.config.get('AI_SERVICE_URL') || 'http://ai-service:8001';
+    let url = this.config.get('AI_SERVICE_URL') || 'http://clinova-ai:8001';
+    if (url && !url.startsWith('http')) {
+      url = `http://${url}`;
+    }
+    return url;
   }
 
   async proxyToAiService(endpoint: string, body: any) {

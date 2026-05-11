@@ -7,7 +7,11 @@ export class VoiceService {
   constructor(private config: ConfigService) {}
 
   private get voiceUrl() {
-    return this.config.get('VOICE_SERVICE_URL') || 'http://voice-service:8003';
+    let url = this.config.get('VOICE_SERVICE_URL') || 'http://clinova-voice:8003';
+    if (url && !url.startsWith('http')) {
+      url = `http://${url}`;
+    }
+    return url;
   }
 
   async proxy(path: string, body: any) {
