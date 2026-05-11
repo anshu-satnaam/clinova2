@@ -50,7 +50,7 @@ app.add_middleware(
 )
 
 # ── Routes ───────────────────────────────────────────────────────────────────
-@app.get("/", methods=["GET", "HEAD"])
+@app.api_route("/", methods=["GET", "HEAD"])
 async def root():
     return {
         "status": "online",
@@ -59,7 +59,7 @@ async def root():
         "message": "AI Core is live and processing clinical workflows."
     }
 
-@app.get("/health", methods=["GET", "HEAD"])
+@app.api_route("/health", methods=["GET", "HEAD"])
 async def health():
     return {"status": "healthy"}
 
