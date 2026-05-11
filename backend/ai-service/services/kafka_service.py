@@ -2,8 +2,15 @@
 AI Service — Kafka Service
 Upstash Kafka producer for Clinova events
 """
-from kafka import KafkaProducer
-from kafka.errors import KafkaError
+try:
+    from kafka import KafkaProducer
+    from kafka.errors import KafkaError
+    KAFKA_AVAILABLE = True
+except ImportError:
+    KAFKA_AVAILABLE = False
+    class KafkaProducer: pass
+    class KafkaError(Exception): pass
+
 import json, os, structlog
 from typing import Optional
 
@@ -16,6 +23,9 @@ class KafkaService:
     @classmethod
     async def initialize(cls):
         """Initialize Kafka producer with Upstash SSL config."""
+        if not KAFKA_AVAILABLE:
+            logger.warning("kafka_library_not_installed_skipping")
+            return
         try:
             # Use a short timeout for the producer creation
             cls._producer = KafkaProducer(
