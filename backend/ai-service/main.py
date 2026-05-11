@@ -19,12 +19,23 @@ logger = structlog.get_logger()
 async def lifespan(app: FastAPI):
     """Startup and shutdown lifecycle."""
     logger.info("🧠 Clinova AI Service starting up...")
-    await ChromaService.initialize()
-    await KafkaService.initialize()
+    try:
+        await ChromaService.initialize()
+    except Exception as e:
+        logger.error("lifespan_chroma_error", error=str(e))
+        
+    try:
+        await KafkaService.initialize()
+    except Exception as e:
+        logger.error("lifespan_kafka_error", error=str(e))
+        
     logger.info("✅ AI Service ready")
     yield
-    logger.info("🛑 AI Service shutting down...")
-    await KafkaService.close()
+    logger.info("🛑 AI Service shutting down (Received Shutdown Signal)")
+    try:
+        await KafkaService.close()
+    except:
+        pass
 
 
 app = FastAPI(

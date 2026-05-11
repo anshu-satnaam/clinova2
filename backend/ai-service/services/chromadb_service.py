@@ -19,18 +19,26 @@ class ChromaService:
     @classmethod
     async def initialize(cls):
         """Initialize ChromaDB client."""
+        import asyncio
         host = os.getenv("CHROMA_HOST", "clinova-chroma")
         port = int(os.getenv("CHROMA_PORT", "10000"))
 
+        logger.info("chromadb_connecting", host=host, port=port)
         try:
+            # Wait a bit for Chroma service to be ready if it's starting simultaneously
+            await asyncio.sleep(2)
             cls._client = await chromadb.AsyncHttpClient(host=host, port=port)
+            # Try a ping or similar?
             # Pre-create collections
             for collection_name in cls.COLLECTIONS:
-                cls._collections[collection_name] = await cls._client.get_or_create_collection(
-                    name=collection_name,
-                    metadata={"hnsw:space": "cosine"}
-                )
-            logger.info("chromadb_initialized", collections=cls.COLLECTIONS)
+                try:
+                    cls._collections[collection_name] = await cls._client.get_or_create_collection(
+                        name=collection_name,
+                        metadata={"hnsw:space": "cosine"}
+                    )
+                except Exception as ce:
+                    logger.error("collection_init_failed", collection=collection_name, error=str(ce))
+            logger.info("chromadb_initialized", collections=list(cls._collections.keys()))
         except Exception as e:
             logger.error("chromadb_init_failed", error=str(e))
             cls._client = None
