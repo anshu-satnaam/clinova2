@@ -13,21 +13,19 @@ logger = structlog.get_logger()
 
 class ChromaService:
     _client: Optional[chromadb.AsyncHttpClient] = None
-    _embedder: Optional[SentenceTransformer] = None
     _collections: Dict[str, Any] = {}
 
     COLLECTIONS = ["patient_notes", "clinical_guidelines", "ai_memory"]
 
     @classmethod
     async def initialize(cls):
-        """Initialize ChromaDB client and create collections."""
+        """Initialize ChromaDB client."""
         host = os.getenv("CHROMA_HOST", "clinova-chroma")
         port = int(os.getenv("CHROMA_PORT", "10000"))
 
         try:
             cls._client = await chromadb.AsyncHttpClient(host=host, port=port)
-            cls._embedder = SentenceTransformer("all-MiniLM-L6-v2")
-
+            # Pre-create collections
             for collection_name in cls.COLLECTIONS:
                 cls._collections[collection_name] = await cls._client.get_or_create_collection(
                     name=collection_name,
@@ -35,62 +33,46 @@ class ChromaService:
                 )
             logger.info("chromadb_initialized", collections=cls.COLLECTIONS)
         except Exception as e:
-            logger.error("chromadb_init_failed_skipping", error=str(e))
+            logger.error("chromadb_init_failed", error=str(e))
             cls._client = None
-            cls._collections = {}
 
     @classmethod
-    async def embed_and_store(
-        cls,
-        text: str,
-        collection: str,
-        document_id: str,
-        metadata: Optional[Dict] = None,
-    ) -> bool:
-        """Embed text and store in ChromaDB collection."""
+    async def embed_and_store(cls, text: str, collection: str, document_id: str, metadata: Optional[Dict] = None) -> bool:
+        """Store text (Chroma handles embedding on server side if configured, or we skip for now)."""
         if not cls._client or collection not in cls._collections:
-            logger.warning("chromadb_not_available_skipping_store", collection=collection)
             return False
         try:
-            embedding = cls._embedder.encode(text).tolist()
+            # We use Chroma's default embedding function (server-side) to save local RAM
             await cls._collections[collection].upsert(
                 ids=[document_id],
-                embeddings=[embedding],
                 documents=[text],
                 metadatas=[metadata or {}],
             )
-            logger.info("document_embedded", collection=collection, doc_id=document_id)
             return True
         except Exception as e:
             logger.error("embed_failed", error=str(e))
             return False
 
     @classmethod
-    async def search(
-        cls,
-        query: str,
-        collection: str,
-        n_results: int = 5,
-        where: Optional[Dict] = None,
-    ) -> List[Dict]:
-        """Semantic search in a ChromaDB collection."""
+    async def search(cls, query: str, collection: str, n_results: int = 5, where: Optional[Dict] = None) -> List[Dict]:
+        """Search in ChromaDB."""
         if collection not in cls._collections:
             return []
         try:
-            embedding = cls._embedder.encode(query).tolist()
             results = await cls._collections[collection].query(
-                query_embeddings=[embedding],
+                query_texts=[query],
                 n_results=n_results,
                 where=where,
                 include=["documents", "metadatas", "distances"],
             )
             docs = []
-            for i, doc in enumerate(results['documents'][0]):
-                docs.append({
-                    "text": doc,
-                    "metadata": results['metadatas'][0][i],
-                    "distance": results['distances'][0][i],
-                })
+            if results['documents']:
+                for i, doc in enumerate(results['documents'][0]):
+                    docs.append({
+                        "text": doc,
+                        "metadata": results['metadatas'][0][i],
+                        "distance": results['distances'][0][i],
+                    })
             return docs
         except Exception as e:
             logger.error("search_failed", error=str(e))

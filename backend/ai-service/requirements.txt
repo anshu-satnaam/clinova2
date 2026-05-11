@@ -1,4 +1,4 @@
-# Clinova AI Service — CPU Optimized
+# Clinova AI Service — Ultra-Light (CPU/Free-Tier Optimized)
 --extra-index-url https://download.pytorch.org/whl/cpu
 
 fastapi
@@ -13,24 +13,17 @@ langchain
 langchain-mistralai
 mistralai
 
-# Database & Vector (CPU Only)
+# Database & Vector (Ultra Light)
 asyncpg
 sqlalchemy[asyncio]
-alembic
 chromadb
-sentence-transformers
-torch==2.5.1+cpu
-torchaudio==2.5.1+cpu
-torchvision==0.20.1+cpu
+# Removed heavy sentence-transformers/torch for free tier compatibility
+# We will use Mistral for embeddings instead of local sentence-transformers
 
 # Conflict Fixes
 tokenizers>=0.22.0,<=0.23.0
 protobuf<6.0
 httpx<0.28.0
-
-# Messaging
-kafka-python
-confluent-kafka
 
 # Utils
 python-multipart
