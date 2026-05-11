@@ -1,39 +1,37 @@
-# Clinova AI Service — Production Requirements
-fastapi==0.115.6
-uvicorn[standard]==0.32.1
-pydantic==2.10.4
-pydantic-settings==2.7.0
-python-dotenv==1.0.1
+# Clinova AI Service
+fastapi
+uvicorn[standard]
+pydantic>=2.0
+pydantic-settings
+python-dotenv
 
-# AI Core (Pinned for compatibility)
-langgraph==0.2.14
-langchain==0.2.11
-langchain-community==0.2.10
-langchain-mistralai==0.1.10
-mistralai==1.1.0
+# AI Logic
+langgraph
+langchain
+langchain-mistralai
+mistralai
 
-# Critical Dependency Fixes (Resolves "ResolutionImpossible" and "ImportError")
-tokenizers==0.22.2
-protobuf==5.29.1
+# Database
+asyncpg
+sqlalchemy[asyncio]
+alembic
+chromadb
+sentence-transformers
 
-# Database & Storage
-asyncpg==0.30.0
-sqlalchemy[asyncio]==2.0.36
-alembic==1.14.0
-chromadb==0.5.23
-sentence-transformers==3.3.1
+# Conflict Fixes
+tokenizers>=0.22.0,<=0.23.0
+protobuf<6.0
 
-# Messaging & Networking
-kafka-python==2.0.2
-confluent-kafka==2.6.1
-httpx==0.27.2
-aiohttp==3.11.10
+# Messaging
+kafka-python
+confluent-kafka
 
-# Security & Utils
-python-multipart==0.0.19
-orjson==3.10.12
-structlog==24.4.0
-prometheus-fastapi-instrumentator==7.0.0
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
-cryptography==43.0.3
+# Utils
+python-multipart
+orjson
+structlog
+prometheus-fastapi-instrumentator
+python-jose[cryptography]
+passlib[bcrypt]
+cryptography
+httpx<0.28.0
