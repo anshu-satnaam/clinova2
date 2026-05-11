@@ -41,7 +41,7 @@ services:
     plan: free
     rootDir: frontend/nextjs-app
     buildCommand: npm install && npm run build
-    startCommand: npm run start
+    startCommand: "npm run start -- -p $PORT"
     envVars:
       - key: NEXT_PUBLIC_API_URL
         fromService:
