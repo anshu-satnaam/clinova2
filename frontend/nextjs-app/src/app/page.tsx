@@ -31,11 +31,16 @@ export default function LoginPage() {
         ? { email, password }
         : { email, password, firstName, lastName, role };
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
       const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       const data = await res.json();
 
@@ -54,8 +59,12 @@ export default function LoginPage() {
         const msg = Array.isArray(data?.message) ? data.message.join(', ') : (data?.message || 'Authentication failed');
         setError(msg);
       }
-    } catch (err) {
-      setError('Cannot connect to gateway. Make sure the backend is running on port 3000.');
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        setError('Request timed out. The backend is taking too long to respond.');
+      } else {
+        setError('Cannot connect to gateway. Make sure the backend is live.');
+      }
     } finally {
       setLoading(false);
     }
