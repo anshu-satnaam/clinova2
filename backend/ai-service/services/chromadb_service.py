@@ -21,8 +21,8 @@ class ChromaService:
     @classmethod
     async def initialize(cls):
         """Initialize ChromaDB client and create collections."""
-        host = os.getenv("CHROMA_HOST", "localhost")
-        port = int(os.getenv("CHROMA_PORT", "8000"))
+        host = os.getenv("CHROMA_HOST", "clinova-chroma")
+        port = int(os.getenv("CHROMA_PORT", "10000"))
 
         try:
             cls._client = await chromadb.AsyncHttpClient(host=host, port=port)

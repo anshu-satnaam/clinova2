@@ -34,7 +34,7 @@ services:
           name: clinova-chroma
           property: host
       - key: CHROMA_PORT
-        value: "8000"
+        value: "10000"
       - key: MISTRAL_API_KEY
         sync: false
       - key: DATABASE_URL
@@ -83,15 +83,9 @@ services:
       - key: PYTHON_VERSION
         value: 3.10.12
       - key: AI_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-ai
-          property: host
+        value: http://clinova-ai:10000
       - key: FHIR_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-fhir
-          property: host
+        value: http://clinova-fhir:10000
       - key: LIVEKIT_API_KEY
         sync: false
       - key: LIVEKIT_API_SECRET
@@ -124,25 +118,13 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: AI_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-ai
-          property: host
+        value: http://clinova-ai:10000
       - key: FHIR_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-fhir
-          property: host
+        value: http://clinova-fhir:10000
       - key: VOICE_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-voice
-          property: host
+        value: http://clinova-voice:10000
       - key: AUDIT_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-audit
-          property: host
+        value: http://clinova-audit:10000
 
   # 7. Frontend (Next.js)
   - type: web
