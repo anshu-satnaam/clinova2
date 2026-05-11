@@ -151,7 +151,4 @@ services:
     rootDir: frontend/nextjs-app
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: clinova-gateway
-          property: host
+        value: https://clinova-gateway.onrender.com
