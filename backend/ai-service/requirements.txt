@@ -13,7 +13,7 @@ langchain-mistralai==0.1.10
 mistralai==1.1.0
 
 # Critical Dependency Fixes (Resolves "ResolutionImpossible" and "ImportError")
-tokenizers==0.23.0
+tokenizers==0.22.2
 protobuf==5.29.1
 
 # Database & Storage
