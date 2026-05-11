@@ -49,6 +49,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ── Routes ───────────────────────────────────────────────────────────────────
+@app.get("/")
+async def root():
+    return {
+        "status": "online",
+        "service": "Clinova AI Engine",
+        "version": "1.0.0",
+        "message": "AI Core is live and processing clinical workflows."
+    }
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
 # ── Routers ───────────────────────────────────────────────────────────────────
 app.include_router(chat.router,      prefix="/api/ai", tags=["chat"])
 app.include_router(summarize.router, prefix="/api/ai", tags=["summarize"])
