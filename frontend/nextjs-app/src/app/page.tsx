@@ -79,7 +79,7 @@ export default function LoginPage() {
             <span className="text-3xl font-black tracking-tighter uppercase italic">Clinova</span>
           </div>
           <h1 className="text-6xl font-black leading-tight mb-6 display-font tracking-tight">
-            The Future of <span className="accent-gradient-text">Clinical</span> Intelligence.
+            The Future of <span className="accent-gradient-text">Cinematic</span> Intelligence.
           </h1>
           <p className="text-lg text-slate-400 font-medium leading-relaxed mb-10">
             Next-generation healthcare AI platform powered by LangGraph, Mistral, and Real-time Voice Agents.
