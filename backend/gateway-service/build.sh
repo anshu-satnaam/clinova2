@@ -15,6 +15,6 @@ echo "🌱 Seeding database..."
 npx ts-node prisma/seed.ts
 
 echo "🏗️ Building NestJS application..."
-npm run build
+./node_modules/.bin/nest build
 
 echo "✅ Build complete!"
