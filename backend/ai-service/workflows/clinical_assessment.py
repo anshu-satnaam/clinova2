@@ -46,12 +46,14 @@ class ClinicalState(TypedDict):
 
 def get_llm():
     api_key = os.getenv("MISTRAL_API_KEY", "")
+    if not api_key:
+        raise ValueError("MISTRAL_API_KEY is not set in the environment variables.")
     model = os.getenv("MISTRAL_MODEL", "mistral-small-latest")
     logger.info("llm_init", model=model, key_set=bool(api_key))
     return ChatMistralAI(
         api_key=api_key,
         model=model,
-        temperature=0.1,  # Low temp for clinical accuracy
+        temperature=0.1,
     )
 
 

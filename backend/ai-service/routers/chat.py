@@ -53,6 +53,9 @@ async def _generate_conversational_response(message: str, history: List[ChatMess
         from langchain_core.messages import HumanMessage, SystemMessage
 
         api_key = os.getenv("MISTRAL_API_KEY", "")
+        if not api_key:
+            return "AI Service Configuration Error: MISTRAL_API_KEY is missing. Please check Render environment variables."
+            
         model = os.getenv("MISTRAL_MODEL", "mistral-medium-latest")
         llm = ChatMistralAI(api_key=api_key, model=model, temperature=0.3)
 
@@ -190,6 +193,7 @@ async def chat(request: ChatRequest):
 
     except Exception as e:
         logger.error("chat_error", error=str(e), session_id=session_id)
+        # For debugging: return the actual error
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"AI workflow failed: {str(e)}"
