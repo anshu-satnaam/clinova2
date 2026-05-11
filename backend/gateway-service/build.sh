@@ -17,12 +17,18 @@ npx ts-node prisma/seed.ts
 echo "🏗️ Building NestJS application..."
 npx -p @nestjs/cli nest build
 
-echo "🔍 Verifying build output..."
-if [ -d "dist" ]; then
-  echo "✅ dist folder found"
-  find dist -maxdepth 2
+echo "🔍 Verifying and fixing build output..."
+if [ -d "dist/src" ]; then
+  echo "📂 Found dist/src, ensuring files are in dist root..."
+  # Move files if they are nested in dist/src
+  cp -r dist/src/* dist/
+fi
+
+if [ -f "dist/main.js" ]; then
+  echo "✅ dist/main.js is ready"
 else
-  echo "❌ dist folder NOT found"
+  echo "❌ dist/main.js NOT found!"
+  find dist -maxdepth 3
   exit 1
 fi
 
