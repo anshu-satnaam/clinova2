@@ -46,6 +46,10 @@ app.include_router(stt.router,      prefix="/api/voice", tags=["speech-to-text"]
 app.include_router(tts.router,      prefix="/api/voice", tags=["text-to-speech"])
 app.include_router(pipeline.router, prefix="/api/voice", tags=["full-pipeline"])
 
+@app.get("/")
+async def root():
+    return {"status": "online", "service": "Clinova Voice Service"}
+
 
 @app.get("/health", tags=["health"])
 async def health():
@@ -55,5 +59,5 @@ async def health():
 if __name__ == "__main__":
     import uvicorn
     import os
-    port = int(os.getenv("VOICE_SERVICE_PORT", 8003))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    port = int(os.getenv("PORT", os.getenv("VOICE_SERVICE_PORT", 8003)))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)

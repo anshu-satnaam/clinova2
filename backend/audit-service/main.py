@@ -43,6 +43,10 @@ app.add_middleware(
 
 app.include_router(audit.router, prefix="/api/audit", tags=["audit"])
 
+@app.get("/")
+async def root():
+    return {"status": "online", "service": "Clinova Audit Service"}
+
 
 @app.get("/health", tags=["health"])
 async def health():
@@ -52,5 +56,5 @@ async def health():
 if __name__ == "__main__":
     import uvicorn
     import os
-    port = int(os.getenv("AUDIT_SERVICE_PORT", 8004))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    port = int(os.getenv("PORT", os.getenv("AUDIT_SERVICE_PORT", 8004)))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)

@@ -62,8 +62,8 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   // ── Start ─────────────────────────────────────────────────
-  const port = process.env.GATEWAY_PORT || 3000;
-  await app.listen(port);
+  const port = process.env.PORT || process.env.GATEWAY_PORT || 3000;
+  await app.listen(port, '0.0.0.0');
   console.log(`🏥 Clinova Gateway running on port ${port}`);
   console.log(`📚 Swagger docs at http://localhost:${port}/api/docs`);
 }

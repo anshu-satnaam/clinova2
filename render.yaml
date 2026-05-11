@@ -1,13 +1,117 @@
+# ════════════════════════════════════════════════════════════════
+#  CLINOVA — Render Blueprint (Production Stack)
+# ════════════════════════════════════════════════════════════════
+
 services:
-  # 1. Gateway Service
+  # 1. ChromaDB (Vector Database)
   - type: web
-    name: clinova-gateway-v2
+    name: clinova-chroma
+    env: docker
+    region: ohio
+    plan: free
+    rootDir: backend/chroma-service
+    envVars:
+      - key: CHROMA_SERVER_HOST
+        value: 0.0.0.0
+      - key: ALLOW_RESET
+        value: "TRUE"
+
+  # 2. AI Service (FastAPI + Mistral)
+  - type: web
+    name: clinova-ai
+    env: python
+    region: ohio
+    plan: free
+    rootDir: backend/ai-service
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: CHROMA_HOST
+        fromService:
+          type: web
+          name: clinova-chroma
+          property: host
+      - key: CHROMA_PORT
+        value: "8000"
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+
+  # 3. FHIR Service (FastAPI)
+  - type: web
+    name: clinova-fhir
+    env: python
+    region: ohio
+    plan: free
+    rootDir: backend/fhir-service
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: DATABASE_URL
+        sync: false
+
+  # 4. Audit Service (FastAPI)
+  - type: web
+    name: clinova-audit
+    env: python
+    region: ohio
+    plan: free
+    rootDir: backend/audit-service
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: DATABASE_URL
+        sync: false
+
+  # 5. Voice Service (FastAPI)
+  - type: web
+    name: clinova-voice
+    env: python
+    region: ohio
+    plan: free
+    rootDir: backend/voice-service
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: AI_SERVICE_URL
+        fromService:
+          type: web
+          name: clinova-ai
+          property: host
+      - key: FHIR_SERVICE_URL
+        fromService:
+          type: web
+          name: clinova-fhir
+          property: host
+      - key: LIVEKIT_API_KEY
+        sync: false
+      - key: LIVEKIT_API_SECRET
+        sync: false
+      - key: LIVEKIT_URL
+        sync: false
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      - key: CARTESIA_API_KEY
+        sync: false
+
+  # 6. Gateway Service (NestJS)
+  - type: web
+    name: clinova-gateway
     env: node
     region: ohio
     plan: free
     rootDir: backend/gateway-service
-    buildCommand: npm install && npm run build
-    startCommand: npm run start:prod
+    buildCommand: "npm install && npx prisma generate && npm run build"
+    startCommand: "npm run start:prod"
     envVars:
       - key: NODE_ENV
         value: production
@@ -17,38 +121,37 @@ services:
         generateValue: true
       - key: JWT_REFRESH_SECRET
         generateValue: true
+      - key: AI_SERVICE_URL
+        fromService:
+          type: web
+          name: clinova-ai
+          property: host
+      - key: FHIR_SERVICE_URL
+        fromService:
+          type: web
+          name: clinova-fhir
+          property: host
+      - key: VOICE_SERVICE_URL
+        fromService:
+          type: web
+          name: clinova-voice
+          property: host
+      - key: AUDIT_SERVICE_URL
+        fromService:
+          type: web
+          name: clinova-audit
+          property: host
 
-  # 2. AI Service
+  # 7. Frontend (Next.js)
   - type: web
-    name: clinova-ai-v2
-    env: python
-    region: ohio
-    plan: free
-    rootDir: backend/ai-service
-    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.10.12
-      - key: MISTRAL_API_KEY
-        sync: false
-
-  # 3. Main Frontend (The one from localhost:3001)
-  - type: web
-    name: clinova-live-dashboard
-    env: node
+    name: clinova-dashboard
+    env: docker
     region: ohio
     plan: free
     rootDir: frontend/nextjs-app
-    buildCommand: npm install && npm run build
-    startCommand: "npm run start -- -p $PORT"
     envVars:
       - key: NEXT_PUBLIC_API_URL
         fromService:
           type: web
-          name: clinova-gateway-v2
+          name: clinova-gateway
           property: host
-      - key: PORT
-        value: 10000
-      - key: RESEND_API_KEY
-        value: re_CaTAtzrR_5rEKW7RTMKDrzrpV6FyNX96b

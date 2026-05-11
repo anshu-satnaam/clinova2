@@ -2,7 +2,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const API_URL = 'http://localhost:3000';
+let API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+if (API_URL && !API_URL.startsWith('http')) {
+  API_URL = `https://${API_URL}`;
+}
 
 export default function LoginPage() {
   const router = useRouter();

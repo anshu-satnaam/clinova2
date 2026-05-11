@@ -46,6 +46,10 @@ app.include_router(observations.router, prefix="/fhir/R4", tags=["Observation"])
 app.include_router(conditions.router,   prefix="/fhir/R4", tags=["Condition"])
 app.include_router(medications.router,  prefix="/fhir/R4", tags=["MedicationRequest"])
 
+@app.get("/")
+async def root():
+    return {"status": "online", "service": "Clinova FHIR Service"}
+
 
 @app.get("/health", tags=["health"])
 async def health():
@@ -55,5 +59,5 @@ async def health():
 if __name__ == "__main__":
     import uvicorn
     import os
-    port = int(os.getenv("FHIR_SERVICE_PORT", 8002))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    port = int(os.getenv("PORT", os.getenv("FHIR_SERVICE_PORT", 8002)))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
