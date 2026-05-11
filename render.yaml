@@ -87,9 +87,15 @@ services:
       - key: PYTHON_VERSION
         value: 3.10.12
       - key: AI_SERVICE_URL
-        value: http://clinova-ai:10000
+        fromService:
+          type: web
+          name: clinova-ai
+          property: host
       - key: FHIR_SERVICE_URL
-        value: http://clinova-fhir:10000
+        fromService:
+          type: web
+          name: clinova-fhir
+          property: host
       - key: LIVEKIT_API_KEY
         sync: false
       - key: LIVEKIT_API_SECRET
@@ -122,13 +128,25 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: AI_SERVICE_URL
-        value: http://clinova-ai:10000
+        fromService:
+          type: web
+          name: clinova-ai
+          property: host
       - key: FHIR_SERVICE_URL
-        value: http://clinova-fhir:10000
+        fromService:
+          type: web
+          name: clinova-fhir
+          property: host
       - key: VOICE_SERVICE_URL
-        value: http://clinova-voice:10000
+        fromService:
+          type: web
+          name: clinova-voice
+          property: host
       - key: AUDIT_SERVICE_URL
-        value: http://clinova-audit:10000
+        fromService:
+          type: web
+          name: clinova-audit
+          property: host
 
   # 7. Frontend (Next.js)
   - type: web
