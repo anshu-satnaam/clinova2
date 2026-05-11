@@ -1,7 +1,7 @@
 services:
-  # 1. Gateway Service (NestJS)
+  # 1. Gateway Service
   - type: web
-    name: clinova-gateway
+    name: clinova-gateway-v2
     env: node
     region: ohio
     plan: free
@@ -12,15 +12,15 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        sync: false # User must provide this in Render dashboard
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
         generateValue: true
 
-  # 2. AI Service (Python)
+  # 2. AI Service
   - type: web
-    name: clinova-ai
+    name: clinova-ai-v2
     env: python
     region: ohio
     plan: free
@@ -31,13 +31,11 @@ services:
       - key: PYTHON_VERSION
         value: 3.10.12
       - key: MISTRAL_API_KEY
-        sync: false # User must provide this
-      - key: CARTESIA_API_KEY
         sync: false
 
-  # 3. Frontend (Next.js)
+  # 3. Main Frontend (The one from localhost:3001)
   - type: web
-    name: clinova-frontend
+    name: clinova-live-dashboard
     env: node
     region: ohio
     plan: free
@@ -48,7 +46,9 @@ services:
       - key: NEXT_PUBLIC_API_URL
         fromService:
           type: web
-          name: clinova-gateway
+          name: clinova-gateway-v2
           property: host
+      - key: PORT
+        value: 10000
       - key: RESEND_API_KEY
-        value: re_CaTAtzrR_5rEKW7RTMKDrzrpV6FyNX96b # Use the provided key
+        value: re_CaTAtzrR_5rEKW7RTMKDrzrpV6FyNX96b
