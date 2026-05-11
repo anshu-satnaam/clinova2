@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinova | Patient Directory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        @import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,900&f[]=satoshi@400,500,700&display=swap');
+
+        :root {
+            --clinova-dark: #0F1419;
+            --clinova-cyan: #00D4FF;
+            --clinova-purple: #7C3AED;
+            --clinova-card: #161C24;
+        }
+
+        body {
+            font-family: 'Satoshi', sans-serif;
+            background-color: var(--clinova-dark);
+            color: white;
+            margin: 0;
+        }
+
+        .display-font {
+            font-family: 'Cabinet Grotesk', sans-serif;
+        }
+
+        .accent-gradient {
+            background: linear-gradient(135deg, var(--clinova-cyan) 0%, var(--clinova-purple) 100%);
+        }
+
+        .accent-border-gradient {
+            background: linear-gradient(var(--clinova-card), var(--clinova-card)) padding-box,
+                        linear-gradient(135deg, var(--clinova-cyan), var(--clinova-purple)) border-box;
+            border: 1px solid transparent;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--clinova-cyan);
+            box-shadow: 0 0 10px var(--clinova-cyan);
+        }
+
+        .card-hover {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2D3748;
+            border-radius: 10px;
+        }
+
+        .cinematic-glow {
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.1);
+        }
+    </style>
+  <style>sd-component { display: block; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+</head>
+<body class="custom-scrollbar">
+    <div class="min-h-screen bg-[#0F1419] flex flex-col">
+        <!-- Top Navigation Bar -->
+        <header class="sticky top-0 z-50 bg-[#0F1419] border-b border-white/5">
+            <div class="max-w-[1440px] mx-auto px-8 h-20 flex items-center justify-between">
+                <!-- Left: Logo -->
+                <div class="flex-1 flex justify-start">
+                    <!-- component: HeaderNavBar (161af611-6ed2-4878-abc8-89d77c9bd899) -->
+<div v-scope="{ ...{&quot;homeHref&quot;:&quot;https://draft-769d1bc4-d07e-4881-962b-43b944e66c2a.preview.superdesign.dev&quot;}, $emit() {} }">
+<a :href="homeHref" class="flex items-center gap-3 no-underline group"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #00D4FF 0%, #7C3AED 100%)"><iconify-icon icon="lucide:stethoscope" class="text-white text-2xl"></iconify-icon></div><span class="text-2xl font-bold tracking-tight text-white" style="font-family: 'Cabinet Grotesk', sans-serif;">CLINOVA</span></a>
+</div>
+<!-- /component: HeaderNavBar (161af611-6ed2-4878-abc8-89d77c9bd899) -->
+                </div>
+
+                <!-- Center: Main Nav Links -->
+                <nav class="hidden lg:flex items-center gap-8 h-full">
+                    <a href="https://draft-769d1bc4-d07e-4881-962b-43b944e66c2a.preview.superdesign.dev" id="nav-dashboard" class="text-[11px] font-bold tracking-[0.2em] text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">Dashboard</a>
+                    <a href="https://draft-1e5a2020-10e1-4742-a46f-6b21c38941c7.preview.superdesign.dev" id="nav-ai-chat" class="text-[11px] font-bold tracking-[0.2em] text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">AI Chat</a>
+                    <a href="https://draft-80cf8093-30ee-431c-8922-709458863a16.preview.superdesign.dev" id="nav-voice" class="text-[11px] font-bold tracking-[0.2em] text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">Voice</a>
+                    <a href="https://draft-e9367cb3-2281-4fd2-9c88-8a1a23261a6d.preview.superdesign.dev" id="nav-audits" class="text-[11px] font-bold tracking-[0.2em] text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">Audit Logs</a>
+                    <a href="https://draft-f158600d-8fbb-45a7-95c0-bc6bf9e2928d.preview.superdesign.dev" id="nav-patients" class="text-[11px] font-bold tracking-[0.2em] text-white transition-colors uppercase h-full flex items-center nav-link nav-link-active">Patients</a>
+                    <a href="https://draft-4b3e9770-2a85-40e4-82e6-922147a2e079.preview.superdesign.dev" id="nav-records" class="text-[11px] font-bold tracking-[0.2em] text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">Records</a>
+                </nav>
+
+                <!-- Right: Profile / Notifications -->
+                <div class="flex-1 flex justify-end items-center gap-6">
+                    <button id="header-search-btn" class="p-2 text-slate-400 hover:text-white transition-colors">
+                        <iconify-icon icon="lucide:search" class="text-xl"></iconify-icon>
+                    </button>
+                    <button id="header-notif-btn" class="p-2 text-slate-400 hover:text-white transition-colors relative">
+                        <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-cyan-400 rounded-full border border-[#0F1419]"></span>
+                    </button>
+                    <div class="h-8 w-[1px] bg-white/10 hidden md:block"></div>
+                    <div class="flex items-center gap-3">
+                        <div class="text-right hidden xl:block">
+                            <p class="text-xs font-bold text-white">Dr. Sarah Johnson</p>
+                            <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Chief Surgeon</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full border border-white/10 overflow-hidden cursor-pointer">
+                            <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=100" alt="Profile" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 max-w-[1440px] mx-auto w-full px-6 py-10">
+            <!-- Page Header Area (Disney+ Cinematic Style) -->
+            <div class="mb-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <span class="text-xs font-bold tracking-[0.3em] uppercase text-cyan-400 mb-3 block">Clinical Workspace</span>
+                        <h1 class="text-5xl md:text-6xl display-font font-black tracking-tighter mb-4">
+                            PATIENT <span class="text-transparent bg-clip-text accent-gradient">DIRECTORY</span>
+                        </h1>
+                        <p class="text-slate-400 max-w-xl text-lg">
+                            Real-time access to patient health records, biometric monitoring, and diagnostic insights powered by Clinova AI.
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <!-- component: PrimaryButton (bf411254-2e27-47c3-a1e0-e7c631878d78) -->
+<div v-scope="{ ...{&quot;buttonType&quot;:&quot;button&quot;}, $emit() {} }">
+<button :type="buttonType" @click="$emit('click', { label: 'SIGN IN' })" class="w-full py-4 rounded-xl font-bold text-white shadow-lg shadow-cyan-950/20 hover:shadow-cyan-400/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0" style="background: linear-gradient(135deg, #00D4FF 0%, #7C3AED 100%)">SIGN IN</button>
+</div>
+<!-- /component: PrimaryButton (bf411254-2e27-47c3-a1e0-e7c631878d78) -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Search Bar -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8">
+                <div class="lg:col-span-5 relative">
+                    <iconify-icon icon="lucide:search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xl"></iconify-icon>
+                    <input type="text" placeholder="Search patients by name, ID, or condition..." class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white focus:bg-white/10 transition-all focus:border-cyan-400 outline-none placeholder:text-slate-600">
+                </div>
+                
+                <div class="lg:col-span-7 flex flex-wrap gap-3">
+                    <select class="flex-1 min-w-[140px] bg-white/5 border border-white/10 rounded-2xl px-4 py-4 text-white appearance-none focus:border-cyan-400 outline-none">
+                        <option value="">Status: All</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    
+                    <select class="flex-1 min-w-[140px] bg-white/5 border border-white/10 rounded-2xl px-4 py-4 text-white appearance-none focus:border-cyan-400 outline-none">
+                        <option value="">Department: All</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="oncology">Oncology</option>
+                        <option value="pediatrics">Pediatrics</option>
+                    </select>
+
+                    <div class="flex-1 min-w-[140px] relative">
+                        <iconify-icon icon="lucide:calendar" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500"></iconify-icon>
+                        <input type="text" placeholder="Last Visit Range" class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-4 text-white focus:border-cyan-400 outline-none placeholder:text-slate-600">
+                    </div>
+
+                    <div class="flex bg-white/5 border border-white/10 rounded-2xl p-1">
+                        <button class="p-3 rounded-xl bg-cyan-400 text-white shadow-lg">
+                            <iconify-icon icon="lucide:layout-grid" class="text-xl"></iconify-icon>
+                        </button>
+                        <button class="p-3 rounded-xl text-slate-500 hover:text-white transition-colors">
+                            <iconify-icon icon="lucide:list" class="text-xl"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <!-- Patient Card 1 -->
+                <div class="bg-[#161C24] border border-white/5 rounded-3xl p-6 card-hover group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 rounded-2xl accent-gradient p-[1px]">
+                            <div class="w-full h-full rounded-2xl bg-[#161C24] flex items-center justify-center overflow-hidden">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" alt="Sarah Miller" class="w-full h-full">
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-widest rounded-full border border-emerald-500/20">Active</span>
+                    </div>
+                    <h3 class="text-xl font-bold display-font mb-1">Sarah Miller</h3>
+                    <p class="text-xs text-slate-500 font-bold tracking-widest uppercase mb-4">PID: CLN-92831</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-3 text-sm">
+                            <iconify-icon icon="lucide:activity" class="text-cyan-400"></iconify-icon>
+                            <span class="text-slate-400">Condition: Oncology</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm">
+                            <iconify-icon icon="lucide:clock" class="text-cyan-400"></iconify-icon>
+                            <span class="text-slate-400">Last Visit: Oct 12, 2023</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2">
+                        <a href="#" id="view-record-1" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:file-text" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Records</span>
+                        </a>
+                        <a href="#" id="schedule-1" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:calendar-plus" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Schedule</span>
+                        </a>
+                        <a href="#" id="message-1" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:message-square" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Message</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Patient Card 2 -->
+                <div class="bg-[#161C24] border border-white/5 rounded-3xl p-6 card-hover group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 rounded-2xl accent-gradient p-[1px]">
+                            <div class="w-full h-full rounded-2xl bg-[#161C24] flex items-center justify-center overflow-hidden">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=James" alt="James Wilson" class="w-full h-full">
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-slate-500/10 text-slate-500 text-[10px] font-bold uppercase tracking-widest rounded-full border border-slate-500/20">Inactive</span>
+                    </div>
+                    <h3 class="text-xl font-bold display-font mb-1">James Wilson</h3>
+                    <p class="text-xs text-slate-500 font-bold tracking-widest uppercase mb-4">PID: CLN-44219</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-3 text-sm">
+                            <iconify-icon icon="lucide:activity" class="text-cyan-400"></iconify-icon>
+                            <span class="text-slate-400">Condition: Cardiology</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm">
+                            <iconify-icon icon="lucide:clock" class="text-cyan-400"></iconify-icon>
+                            <span class="text-slate-400">Last Visit: Aug 05, 2023</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2">
+                        <a href="#" id="view-record-2" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:file-text" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Records</span>
+                        </a>
+                        <a href="#" id="schedule-2" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:calendar-plus" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Schedule</span>
+                        </a>
+                        <a href="#" id="message-2" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:message-square" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Message</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Patient Card 3 -->
+                <div class="bg-[#161C24] border border-white/5 rounded-3xl p-6 card-hover group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 rounded-2xl accent-gradient p-[1px]">
+                            <div class="w-full h-full rounded-2xl bg-[#161C24] flex items-center justify-center overflow-hidden">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elena" alt="Elena Rodriguez" class="w-full h-full">
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-widest rounded-full border border-emerald-500/20">Active</span>
+                    </div>
+                    <h3 class="text-xl font-bold display-font mb-1">Elena Rodriguez</h3>
+                    <p class="text-xs text-slate-500 font-bold tracking-widest uppercase mb-4">PID: CLN-10552</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-3 text-sm">
+                            <iconify-icon icon="lucide:activity" class="text-cyan-400"></iconify-icon>
+                            <span class="text-slate-400">Condition: Neurology</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm">
+                            <iconify-icon icon="lucide:clock" class="text-cyan-400"></iconify-icon>
+                            <span class="text-slate-400">Last Visit: Nov 02, 2023</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2">
+                        <a href="#" id="view-record-3" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:file-text" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Records</span>
+                        </a>
+                        <a href="#" id="schedule-3" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:calendar-plus" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Schedule</span>
+                        </a>
+                        <a href="#" id="message-3" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:message-square" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Message</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Patient Card 4 -->
+                <div class="bg-[#161C24] border border-white/5 rounded-3xl p-6 card-hover group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 rounded-2xl accent-gradient p-[1px]">
+                            <div class="w-full h-full rounded-2xl bg-[#161C24] flex items-center justify-center overflow-hidden">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus" alt="Marcus Chen" class="w-full h-full">
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-widest rounded-full border border-emerald-500/20">Active</span>
+                    </div>
+                    <h3 class="text-xl font-bold display-font mb-1">Marcus Chen</h3>
+                    <p class="text-xs text-slate-500 font-bold tracking-widest uppercase mb-4">PID: CLN-88402</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-3 text-sm">
+                            <iconify-icon icon="lucide:activity" class="text-cyan-400"></iconify-icon>
+                            <span class="text-slate-400">Condition: Pediatrics</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm">
+                            <iconify-icon icon="lucide:clock" class="text-cyan-400"></iconify-icon>
+                            <span class="text-slate-400">Last Visit: Oct 28, 2023</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2">
+                        <a href="#" id="view-record-4" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:file-text" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Records</span>
+                        </a>
+                        <a href="#" id="schedule-4" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:calendar-plus" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Schedule</span>
+                        </a>
+                        <a href="#" id="message-4" class="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group/action">
+                            <iconify-icon icon="lucide:message-square" class="text-lg text-slate-400 group-hover/action:text-cyan-400"></iconify-icon>
+                            <span class="text-[8px] font-bold uppercase tracking-tighter">Message</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-12 flex items-center justify-between border-t border-white/5 pt-8">
+                <p class="text-sm text-slate-500">Showing 1-12 of 1,284 patients</p>
+                <div class="flex items-center gap-2">
+                    <button id="page-prev" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all">
+                        <iconify-icon icon="lucide:chevron-left"></iconify-icon>
+                    </button>
+                    <button id="page-1" class="w-10 h-10 flex items-center justify-center rounded-xl accent-gradient font-bold shadow-lg shadow-cyan-950/20">1</button>
+                    <button id="page-2" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all">2</button>
+                    <button id="page-3" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all">3</button>
+                    <span class="text-slate-600 px-2">...</span>
+                    <button id="page-107" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all">107</button>
+                    <button id="page-next" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all">
+                        <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Component -->
+        <div class="max-w-[1440px] mx-auto w-full">
+            <!-- component: AuthFooter (7487a41d-0f3c-4c8b-8a76-70b4e3358a07) -->
+<div v-scope="{ ...{&quot;privacyHref&quot;:&quot;#privacy-policy&quot;,&quot;termsHref&quot;:&quot;#terms-of-service&quot;}, $emit() {} }">
+<footer class="mt-12 pt-8 border-t border-white/5 flex flex-wrap justify-center gap-6 text-xs text-slate-500 uppercase tracking-widest">
+    <a :href="privacyHref" class="hover:text-white transition-colors">Privacy Policy</a>
+    <a :href="termsHref" class="hover:text-white transition-colors">Terms of Service</a>
+    <span class="hidden md:inline">© 2024 Clinova Health Inc.</span>
+</footer>
+</div>
+<!-- /component: AuthFooter (7487a41d-0f3c-4c8b-8a76-70b4e3358a07) -->
+        </div>
+    </div>
+</body>
+</html>

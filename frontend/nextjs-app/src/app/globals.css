@@ -1,4 +1,88 @@
+@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,900&f[]=satoshi@400,500,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body { font-family: 'Inter', sans-serif; }
+
+:root {
+  --clinova-dark: #0F1419;
+  --clinova-dark-alt: #161B22;
+  --clinova-cyan: #00D4FF;
+  --clinova-purple: #7C3AED;
+  --clinova-surface: #1A1F26;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Satoshi', sans-serif;
+  background-color: var(--clinova-dark);
+  color: white;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.display-font { font-family: 'Cabinet Grotesk', sans-serif; }
+
+.accent-gradient { background: linear-gradient(135deg, #00D4FF 0%, #7C3AED 100%); }
+.accent-gradient-text {
+  background: linear-gradient(135deg, #00D4FF 0%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.card-bg {
+  background-color: #161B22;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #2D3748; border-radius: 10px; }
+
+.nav-underline-active {
+  position: relative;
+}
+.nav-underline-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--clinova-cyan);
+  box-shadow: 0 0 10px var(--clinova-cyan);
+}
+
+.waveform-bar {
+  width: 4px;
+  background: linear-gradient(to top, #00D4FF, #7C3AED);
+  border-radius: 2px;
+  animation: wave-bounce 1.2s ease-in-out infinite;
+}
+
+@keyframes wave-bounce {
+  0%, 100% { height: 10px; opacity: 0.5; }
+  50% { height: 60px; opacity: 1; }
+}
+
+.card-hover {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+input, select, textarea {
+  color: white !important;
+}
+input::placeholder { color: #475569; }
+select option { background: #0F1419; color: white; }

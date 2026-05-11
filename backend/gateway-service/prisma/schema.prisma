@@ -112,8 +112,19 @@ model Patient {
   user         User          @relation(fields: [userId], references: [id])
   appointments Appointment[]
   voiceSessions VoiceSession[]
+  contactEmails PatientContactEmail[]
 
   @@map("patients")
+}
+
+model PatientContactEmail {
+  id        String   @id @default(uuid())
+  email     String
+  patientId String   @map("patient_id")
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@map("patient_contact_emails")
 }
 
 // ── Doctor ────────────────────────────────────────────────────────────────────

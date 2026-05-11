@@ -50,3 +50,10 @@ app.include_router(medications.router,  prefix="/fhir/R4", tags=["MedicationRequ
 @app.get("/health", tags=["health"])
 async def health():
     return {"status": "healthy", "service": "clinova-fhir-service", "version": "1.0.0"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    port = int(os.getenv("FHIR_SERVICE_PORT", 8002))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

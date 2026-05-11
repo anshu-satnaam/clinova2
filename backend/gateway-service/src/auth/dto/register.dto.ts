@@ -40,4 +40,24 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   specialization?: string;
+
+  // Patient Fields
+  @IsOptional()
+  @IsString()
+  gender?: string;
+
+  @IsOptional()
+  @IsString()
+  bloodType?: string;
+
+  @IsOptional()
+  @IsString()
+  dateOfBirth?: string;
+
+  @IsOptional()
+  @IsString()
+  emergencyContact?: string;
+
+  @IsOptional()
+  allergies?: string[];
 }

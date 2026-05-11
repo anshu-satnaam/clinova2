@@ -12,6 +12,16 @@ import os
 
 logger = structlog.get_logger()
 
+# Load .env explicitly
+try:
+    from dotenv import load_dotenv
+    import pathlib
+    env_path = pathlib.Path(__file__).parent.parent / '.env'
+    load_dotenv(dotenv_path=env_path, override=True)
+    logger.info("env_loaded", path=str(env_path))
+except Exception as e:
+    logger.warning("env_load_failed", error=str(e))
+
 
 # ── State ─────────────────────────────────────────────────────────────────────
 
@@ -35,9 +45,12 @@ class ClinicalState(TypedDict):
 # ── LLM ───────────────────────────────────────────────────────────────────────
 
 def get_llm():
+    api_key = os.getenv("MISTRAL_API_KEY", "")
+    model = os.getenv("MISTRAL_MODEL", "mistral-small-latest")
+    logger.info("llm_init", model=model, key_set=bool(api_key))
     return ChatMistralAI(
-        api_key=os.getenv("MISTRAL_API_KEY"),
-        model=os.getenv("MISTRAL_MODEL", "mistral-medium-latest"),
+        api_key=api_key,
+        model=model,
         temperature=0.1,  # Low temp for clinical accuracy
     )
 

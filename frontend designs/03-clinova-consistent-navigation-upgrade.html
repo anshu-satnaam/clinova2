@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Consultation | Clinova Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        @import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,900&f[]=satoshi@400,500,700&display=swap');
+
+        :root {
+            --clinova-dark: #0F1419;
+            --clinova-cyan: #00D4FF;
+            --clinova-purple: #7C3AED;
+            --clinova-surface: #1A1F26;
+        }
+
+        body {
+            font-family: 'Satoshi', sans-serif;
+            background-color: var(--clinova-dark);
+            color: white;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .display-font {
+            font-family: 'Cabinet Grotesk', sans-serif;
+        }
+
+        .accent-gradient {
+            background: linear-gradient(135deg, var(--clinova-cyan) 0%, var(--clinova-purple) 100%);
+        }
+
+        .waveform-bar {
+            width: 4px;
+            background: linear-gradient(to top, var(--clinova-cyan), var(--clinova-purple));
+            border-radius: 2px;
+            animation: wave-bounce 1.2s ease-in-out infinite;
+        }
+
+        @keyframes wave-bounce {
+            0%, 100% { height: 10px; opacity: 0.5; }
+            50% { height: 60px; opacity: 1; }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-link:hover {
+            color: var(--clinova-cyan);
+        }
+    </style>
+  <style>sd-component { display: block; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+</head>
+<body>
+    <div class="h-screen flex flex-col">
+        <!-- Consistent Top Header -->
+        <header class="h-20 border-b border-white/10 px-8 flex items-center justify-between sticky top-0 bg-[#0F1419] z-50">
+            <div class="flex items-center flex-1">
+                <!-- component: HeaderNavBar (161af611-6ed2-4878-abc8-89d77c9bd899) -->
+<div v-scope="{ ...{&quot;homeHref&quot;:&quot;https://draft-769d1bc4-d07e-4881-962b-43b944e66c2a.preview.superdesign.dev&quot;}, $emit() {} }">
+<a :href="homeHref" class="flex items-center gap-3 no-underline group"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #00D4FF 0%, #7C3AED 100%)"><iconify-icon icon="lucide:stethoscope" class="text-white text-2xl"></iconify-icon></div><span class="text-2xl font-bold tracking-tight text-white" style="font-family: 'Cabinet Grotesk', sans-serif;">CLINOVA</span></a>
+</div>
+<!-- /component: HeaderNavBar (161af611-6ed2-4878-abc8-89d77c9bd899) -->
+            </div>
+
+            <nav class="hidden lg:flex items-center justify-center gap-8 flex-1">
+                <a href="https://draft-769d1bc4-d07e-4881-962b-43b944e66c2a.preview.superdesign.dev" id="nav-dashboard-link" class="nav-link text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase transition-colors">Dashboard</a>
+                <a href="https://draft-1e5a2020-10e1-4742-a46f-6b21c38941c7.preview.superdesign.dev" id="nav-ai-chat-link" class="nav-link text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase transition-colors">AI Chat</a>
+                <a href="https://draft-80cf8093-30ee-431c-8922-709458863a16.preview.superdesign.dev" id="nav-voice-link" class="nav-link text-[10px] font-bold tracking-[0.2em] text-cyan-400 border-b border-cyan-400 pb-1 uppercase">Voice</a>
+                <a href="https://draft-e9367cb3-2281-4fd2-9c88-8a1a23261a6d.preview.superdesign.dev" id="nav-audit-logs-link" class="nav-link text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase transition-colors">Audit Logs</a>
+                <a href="https://draft-f158600d-8fbb-45a7-95c0-bc6bf9e2928d.preview.superdesign.dev" id="nav-patients-link" class="nav-link text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase transition-colors">Patients</a>
+                <a href="https://draft-4b3e9770-2a85-40e4-82e6-922147a2e079.preview.superdesign.dev" id="nav-records-link" class="nav-link text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase transition-colors">Records</a>
+            </nav>
+            
+            <div class="flex items-center justify-end gap-6 flex-1">
+                <div class="hidden md:flex flex-col items-end">
+                    <span class="text-[10px] uppercase tracking-widest text-white font-bold">Dr. Michael Ross</span>
+                    <span class="text-[9px] text-cyan-400/80 font-bold uppercase tracking-tighter">VC-89021-X Active</span>
+                </div>
+                <div class="w-10 h-10 rounded-xl accent-gradient p-[1px]">
+                    <div class="w-full h-full rounded-xl bg-[#0F1419] overflow-hidden cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=100" alt="Profile" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Interaction Area -->
+        <main class="flex-1 flex overflow-hidden">
+            <!-- Left Content Area (60%) -->
+            <div class="w-[60%] flex flex-col border-r border-white/5">
+                <!-- Audio Engine Section -->
+                <div class="flex-1 p-10 flex flex-col">
+                    <div class="flex justify-between items-start mb-8">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Connection Stable</span>
+                            </div>
+                            <h2 class="text-4xl display-font font-black tracking-tight">Voice Consultation</h2>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-5xl display-font font-bold tracking-tighter text-cyan-400 tabular-nums">04:32</div>
+                            <div class="text-[10px] uppercase font-bold text-slate-500 tracking-widest mt-1">Session Duration</div>
+                        </div>
+                    </div>
+
+                    <!-- Waveform Area -->
+                    <div class="flex-1 glass-panel rounded-3xl flex items-center justify-center relative overflow-hidden group mb-8">
+                        <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5"></div>
+                        <div class="flex items-center gap-1 h-32 z-10">
+                            <!-- Visualizer Bars -->
+                            <div class="waveform-bar" style="animation-delay: 0.1s; height: 30px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.3s; height: 50px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.2s; height: 80px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.5s; height: 40px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.4s; height: 100px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.7s; height: 60px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.2s; height: 30px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.6s; height: 90px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.1s; height: 40px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.3s; height: 70px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.5s; height: 50px;"></div>
+                            <div class="waveform-bar" style="animation-delay: 0.8s; height: 30px;"></div>
+                        </div>
+
+                        <!-- Controls Overlay -->
+                        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-6">
+                            <button class="w-14 h-14 rounded-full border border-white/20 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all group">
+                                <iconify-icon icon="lucide:mic-off" class="text-xl group-hover:text-red-400"></iconify-icon>
+                            </button>
+                            <button class="w-20 h-20 rounded-full accent-gradient flex items-center justify-center shadow-2xl shadow-cyan-500/20 hover:scale-105 active:scale-95 transition-all">
+                                <iconify-icon icon="lucide:square" class="text-2xl text-white"></iconify-icon>
+                            </button>
+                            <button class="w-14 h-14 rounded-full border border-white/20 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all group">
+                                <iconify-icon icon="lucide:pause" class="text-xl group-hover:text-cyan-400"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Transcript Header -->
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Live Transcription</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-slate-500 uppercase">Accuracy: 98%</span>
+                            <iconify-icon icon="lucide:settings-2" class="text-slate-500 cursor-pointer hover:text-white"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <!-- Transcript Log -->
+                    <div class="flex-1 bg-black/20 rounded-2xl p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6">
+                        <div class="flex gap-4">
+                            <span class="flex-shrink-0 text-[10px] text-cyan-400 font-bold w-12 pt-1">04:25</span>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase mb-1 tracking-tighter">Dr. Michael Ross</span>
+                                <p class="text-sm text-slate-200 leading-relaxed">Can you describe the pain in your lower back? Is it sharp or more of a dull ache that lingers throughout the day?</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <span class="flex-shrink-0 text-[10px] text-purple-400 font-bold w-12 pt-1">04:28</span>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase mb-1 tracking-tighter">Sarah Jenkins</span>
+                                <p class="text-sm text-white font-medium leading-relaxed italic">It's more of a sharp radiating pain that starts when I stand up after sitting for a long time.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <span class="flex-shrink-0 text-[10px] text-cyan-400 font-bold w-12 pt-1">04:30</span>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase mb-1 tracking-tighter">Dr. Michael Ross</span>
+                                <p class="text-sm text-slate-200 leading-relaxed">I see. And does it travel down to your legs, or stay localized in the lumbar region?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar Panel (40%) -->
+            <aside class="w-[40%] bg-[#12181F] flex flex-col p-8 overflow-y-auto custom-scrollbar">
+                <!-- Patient Summary Card -->
+                <div class="glass-panel rounded-3xl p-6 mb-8 border border-white/5 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 blur-[40px] rounded-full"></div>
+                    <div class="flex items-center gap-5 relative z-10">
+                        <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-white/10">
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200" alt="Patient Avatar" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="text-2xl display-font font-bold tracking-tight">Sarah Jenkins</h3>
+                            <p class="text-sm text-slate-400">F, 34 • PID-99812-SJ</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-400 uppercase tracking-widest">High Risk</span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-white/5 text-slate-400 uppercase tracking-widest">Blood Type: O+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vitals Grid -->
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="bg-white/5 rounded-2xl p-4">
+                        <div class="flex items-center gap-2 text-red-400 mb-1">
+                            <iconify-icon icon="lucide:heart-pulse"></iconify-icon>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Heart Rate</span>
+                        </div>
+                        <div class="flex items-end gap-1">
+                            <span class="text-2xl display-font font-black">78</span>
+                            <span class="text-xs text-slate-500 mb-1">BPM</span>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4">
+                        <div class="flex items-center gap-2 text-cyan-400 mb-1">
+                            <iconify-icon icon="lucide:activity"></iconify-icon>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Blood Pressure</span>
+                        </div>
+                        <div class="flex items-end gap-1">
+                            <span class="text-2xl display-font font-black">120/80</span>
+                            <span class="text-xs text-slate-500 mb-1">mmHg</span>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4">
+                        <div class="flex items-center gap-2 text-orange-400 mb-1">
+                            <iconify-icon icon="lucide:thermometer"></iconify-icon>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Temp</span>
+                        </div>
+                        <div class="flex items-end gap-1">
+                            <span class="text-2xl display-font font-black">98.6</span>
+                            <span class="text-xs text-slate-500 mb-1">°F</span>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4">
+                        <div class="flex items-center gap-2 text-blue-400 mb-1">
+                            <iconify-icon icon="lucide:droplets"></iconify-icon>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Oxygen</span>
+                        </div>
+                        <div class="flex items-end gap-1">
+                            <span class="text-2xl display-font font-black">99</span>
+                            <span class="text-xs text-slate-500 mb-1">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clinical History -->
+                <div class="flex-1 space-y-6">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Current Medications</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+                                <span class="text-sm font-medium">Lisinopril 10mg</span>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase">Daily</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+                                <span class="text-sm font-medium">Metformin 500mg</span>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase">Twice Daily</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Recent Notes</h4>
+                        <div class="p-4 rounded-2xl bg-black/30 border border-white/5">
+                            <p class="text-xs text-slate-400 italic mb-2 leading-relaxed">"Patient reports occasional dizziness. Last MRI (02/24) showed minor lumbar compression. Recommend follow-up physical therapy."</p>
+                            <span class="text-[10px] font-bold text-cyan-500">05 MAR 2024 • DR. CARTER</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script>
+        // Micro-interaction for bars randomization to look more real
+        document.querySelectorAll('.waveform-bar').forEach(bar => {
+            bar.style.animationDuration = (0.5 + Math.random() * 1) + 's';
+            bar.style.animationDelay = (Math.random() * 0.5) + 's';
+        });
+    </script>
+</body>
+</html>

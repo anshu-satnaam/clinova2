@@ -9,22 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@livekit/components-react": "^1.5.3",
+    "axios": "^1.6.2",
+    "livekit-client": "^1.15.5",
     "next": "14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "axios": "^1.6.2",
-    "livekit-client": "^1.15.5",
-    "@livekit/components-react": "^1.5.3"
+    "recharts": "^3.8.1",
+    "resend": "^6.12.3"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
-    "typescript": "^5.3.3",
+    "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.1.0",
+    "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.33"
+    "typescript": "^5.3.3"
   }
 }

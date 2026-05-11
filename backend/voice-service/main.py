@@ -50,3 +50,10 @@ app.include_router(pipeline.router, prefix="/api/voice", tags=["full-pipeline"])
 @app.get("/health", tags=["health"])
 async def health():
     return {"status": "healthy", "service": "clinova-voice-service", "version": "1.0.0"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    port = int(os.getenv("VOICE_SERVICE_PORT", 8003))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

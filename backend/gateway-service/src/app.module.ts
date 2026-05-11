@@ -9,6 +9,7 @@ import { AiModule } from './ai/ai.module';
 import { VoiceModule } from './voice/voice.module';
 import { KafkaModule } from './kafka/kafka.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuditModule } from './audit/audit.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PrismaModule } from './prisma/prisma.module';
     RecordsModule,
     AiModule,
     VoiceModule,
+    AuditModule,
   ],
 })
 export class AppModule {}

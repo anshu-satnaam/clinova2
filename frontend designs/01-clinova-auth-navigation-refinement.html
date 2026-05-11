@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinova | Clinical Intelligence Redefined</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        @import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,900&f[]=satoshi@400,500,700&display=swap');
+
+        :root {
+            --clinova-dark: #0F1419;
+            --clinova-cyan: #00D4FF;
+            --clinova-purple: #7C3AED;
+        }
+
+        body {
+            font-family: 'Satoshi', sans-serif;
+            background-color: var(--clinova-dark);
+            color: white;
+            margin: 0;
+        }
+
+        .display-font {
+            font-family: 'Cabinet Grotesk', sans-serif;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(to right, rgba(15, 20, 25, 0.9) 0%, rgba(15, 20, 25, 0.4) 50%, rgba(15, 20, 25, 0) 100%),
+                        linear-gradient(to top, rgba(15, 20, 25, 1) 0%, rgba(15, 20, 25, 0) 40%);
+        }
+
+        .accent-gradient {
+            background: linear-gradient(135deg, var(--clinova-cyan) 0%, var(--clinova-purple) 100%);
+        }
+
+        .input-focus:focus {
+            border-color: var(--clinova-cyan);
+            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+            outline: none;
+        }
+
+        .tab-active {
+            color: white;
+            border-bottom: 2px solid var(--clinova-cyan);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2D3748;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col lg:flex-row">
+        <!-- Left: Hero Section (Cinematic Desktop Only) -->
+        <section class="hidden lg:flex lg:w-[60%] relative overflow-hidden">
+            <!-- Cinematic Background -->
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=1600" 
+                     alt="Modern Medical Laboratory" 
+                     class="w-full h-full object-cover grayscale-[0.2] brightness-[0.6]">
+                <div class="absolute inset-0 hero-gradient"></div>
+                <!-- Subtle Cyan Glow -->
+                <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-[#00D4FF] opacity-10 blur-[100px] rounded-full"></div>
+            </div>
+
+            <!-- Content Overlays -->
+            <div class="relative z-10 p-16 flex flex-col justify-between h-full w-full">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 accent-gradient rounded-lg flex items-center justify-center">
+                        <iconify-icon icon="lucide:stethosope" class="text-white text-2xl"></iconify-icon>
+                    </div>
+                    <span class="text-2xl font-bold tracking-tight display-font">CLINOVA</span>
+                </div>
+
+                <!-- Big Bold Typography (Disney+ Style) -->
+                <div class="max-w-2xl">
+                    <span class="inline-block px-3 py-1 rounded bg-white/10 text-[10px] uppercase tracking-[0.2em] font-bold mb-6 backdrop-blur-md border border-white/20">Future of Care</span>
+                    <h1 class="text-7xl xl:text-8xl display-font font-black tracking-tighter leading-[0.9] mb-8">
+                        NEXT GEN<br/>
+                        <span class="text-transparent bg-clip-text accent-gradient">PRECISION</span>
+                    </h1>
+                    <p class="text-xl text-slate-300 max-w-lg leading-relaxed">
+                        Transforming healthcare delivery through cinematic data visualization and AI-driven clinical insights. Trusted by 200+ hospitals worldwide.
+                    </p>
+                </div>
+
+                <!-- Hero Footer Info -->
+                <div class="flex items-center gap-8 text-sm text-slate-400">
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="lucide:shield-check" class="text-cyan-400 text-lg"></iconify-icon>
+                        <span>HIPAA Compliant</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="lucide:zap" class="text-cyan-400 text-lg"></iconify-icon>
+                        <span>Real-time Analytics</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right: Auth Section -->
+        <section class="w-full lg:w-[40%] bg-[#0F1419] flex flex-col p-8 md:p-16 lg:p-12 xl:p-20 overflow-y-auto custom-scrollbar">
+            <!-- Mobile Header -->
+            <div class="lg:hidden flex justify-between items-center mb-12">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 accent-gradient rounded-md flex items-center justify-center">
+                        <iconify-icon icon="lucide:stethosope" class="text-white text-lg"></iconify-icon>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight display-font">CLINOVA</span>
+                </div>
+                <a href="#" id="mobile-help-link" class="text-xs text-slate-400 hover:text-white transition-colors">Need help?</a>
+            </div>
+
+            <!-- Help link (Desktop) -->
+            <div class="hidden lg:flex justify-end mb-12">
+                <a href="#" id="desktop-help-link" class="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-2">
+                    <iconify-icon icon="lucide:help-circle"></iconify-icon>
+                    Need help?
+                </a>
+            </div>
+
+            <!-- Form Container -->
+            <div class="flex-1 flex flex-col justify-center">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold display-font mb-2">Welcome back</h2>
+                    <p class="text-slate-400">Sign in to continue to your healthcare workspace.</p>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex border-b border-white/10 mb-8">
+                    <button id="tab-login" onclick="switchTab('login')" class="px-8 py-3 text-sm font-bold tracking-wider transition-all tab-active">
+                        SIGN IN
+                    </button>
+                    <button id="tab-signup" onclick="switchTab('signup')" class="px-8 py-3 text-sm font-bold tracking-wider text-slate-500 hover:text-white transition-all">
+                        CREATE ACCOUNT
+                    </button>
+                </div>
+
+                <!-- Forms -->
+                <div id="form-container">
+                    <!-- Login Form -->
+                    <form id="login-form" class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Email Address</label>
+                            <input type="email" placeholder="doctor.smith@clinova.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder:text-slate-600 focus:bg-white/10 transition-all input-focus">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Password</label>
+                                <a href="#" id="forgot-password-link" class="text-xs text-cyan-400 hover:text-cyan-300 font-bold">Forgot password?</a>
+                            </div>
+                            <input type="password" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder:text-slate-600 focus:bg-white/10 transition-all input-focus">
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="remember" class="w-4 h-4 rounded border-white/20 bg-white/5 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0">
+                            <label for="remember" class="text-sm text-slate-400">Stay signed in for 30 days</label>
+                        </div>
+                        <button type="submit" class="w-full py-4 accent-gradient rounded-xl font-bold text-white shadow-lg shadow-cyan-950/20 hover:shadow-cyan-400/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                            SIGN IN
+                        </button>
+                    </form>
+
+                    <!-- Signup Form (Hidden by default) -->
+                    <form id="signup-form" class="space-y-5 hidden">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Full Name</label>
+                            <input type="text" placeholder="Dr. Sarah Johnson" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder:text-slate-600 focus:bg-white/10 transition-all input-focus">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Medical Email</label>
+                            <input type="email" placeholder="name@hospital.org" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder:text-slate-600 focus:bg-white/10 transition-all input-focus">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Password</label>
+                                <input type="password" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder:text-slate-600 focus:bg-white/10 transition-all input-focus">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Confirm</label>
+                                <input type="password" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder:text-slate-600 focus:bg-white/10 transition-all input-focus">
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <input type="checkbox" id="terms" class="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0">
+                            <label for="terms" class="text-sm text-slate-400">I agree to the <a href="#" class="text-cyan-400">Terms of Service</a> and <a href="#" class="text-cyan-400">Privacy Policy</a>.</label>
+                        </div>
+                        <button type="submit" class="w-full py-4 accent-gradient rounded-xl font-bold text-white shadow-lg shadow-cyan-950/20 hover:shadow-cyan-400/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                            CREATE ACCOUNT
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Social Auth -->
+                <div class="mt-12">
+                    <div class="relative flex items-center mb-8">
+                        <div class="flex-grow border-t border-white/10"></div>
+                        <span class="flex-shrink mx-4 text-xs font-bold text-slate-500 uppercase tracking-[0.3em]">or continue with</span>
+                        <div class="flex-grow border-t border-white/10"></div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <button class="flex items-center justify-center gap-3 py-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all font-bold text-xs uppercase tracking-widest">
+                            <iconify-icon icon="logos:google-icon" class="text-xl"></iconify-icon>
+                            <span>Continue with Google</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="mt-12 pt-8 border-t border-white/5 flex flex-col items-center gap-8 text-xs text-slate-500 uppercase tracking-widest">
+                <nav class="flex flex-wrap justify-center gap-x-8 gap-y-4 font-bold">
+                    <a href="#" id="nav-footer-login" class="text-white">Login</a>
+                    <a href="https://draft-769d1bc4-d07e-4881-962b-43b944e66c2a.preview.superdesign.dev" id="nav-footer-dashboard" class="hover:text-white transition-colors">Dashboard</a>
+                    <a href="https://draft-1e5a2020-10e1-4742-a46f-6b21c38941c7.preview.superdesign.dev" id="nav-footer-ai-chat" class="hover:text-white transition-colors">AI Chat</a>
+                    <a href="https://draft-80cf8093-30ee-431c-8922-709458863a16.preview.superdesign.dev" id="nav-footer-voice" class="hover:text-white transition-colors">Voice</a>
+                    <a href="https://draft-e9367cb3-2281-4fd2-9c88-8a1a23261a6d.preview.superdesign.dev" id="nav-footer-audit" class="hover:text-white transition-colors">Audit Logs</a>
+                    <a href="https://draft-f158600d-8fbb-45a7-95c0-bc6bf9e2928d.preview.superdesign.dev" id="nav-footer-patients" class="hover:text-white transition-colors">Patients</a>
+                    <a href="https://draft-4b3e9770-2a85-40e4-82e6-922147a2e079.preview.superdesign.dev" id="nav-footer-records" class="hover:text-white transition-colors">Records</a>
+                </nav>
+                <div class="flex flex-wrap justify-center gap-6 opacity-60">
+                    <a href="#" id="footer-privacy-link" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" id="footer-terms-link" class="hover:text-white transition-colors">Terms of Service</a>
+                    <span class="hidden md:inline">© 2024 Clinova Health Inc.</span>
+                </div>
+            </footer>
+        </section>
+    </div>
+
+    <script>
+        function switchTab(mode) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+            const headerTitle = document.querySelector('h2');
+            const headerDesc = document.querySelector('h2 + p');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabLogin.classList.add('tab-active');
+                tabLogin.classList.remove('text-slate-500');
+                tabSignup.classList.remove('tab-active');
+                tabSignup.classList.add('text-slate-500');
+                headerTitle.innerText = "Welcome back";
+                headerDesc.innerText = "Sign in to continue to your healthcare workspace.";
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                tabLogin.classList.remove('tab-active');
+                tabLogin.classList.add('text-slate-500');
+                tabSignup.classList.add('tab-active');
+                tabSignup.classList.remove('text-slate-500');
+                headerTitle.innerText = "Join Clinova";
+                headerDesc.innerText = "Start your journey with precision healthcare tools.";
+            }
+        }
+    </script>
+</body>
+</html>

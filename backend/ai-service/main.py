@@ -60,3 +60,10 @@ app.include_router(workflow.router,  prefix="/api/ai", tags=["workflow"])
 @app.get("/health", tags=["health"])
 async def health():
     return {"status": "healthy", "service": "clinova-ai-service", "version": "1.0.0"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    port = int(os.getenv("AI_SERVICE_PORT", 8001))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

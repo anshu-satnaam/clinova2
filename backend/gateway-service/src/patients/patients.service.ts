@@ -32,18 +32,24 @@ export class PatientsService {
         where,
         skip,
         take: limit,
-        include: { user: { select: { id: true, email: true, firstName: true, lastName: true, phone: true } } },
+        include: { 
+          user: { select: { id: true, email: true, firstName: true, lastName: true, phone: true } },
+          contactEmails: true 
+        },
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.patient.count({ where }),
     ]);
-    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
   }
 
   async findOne(id: string) {
     const patient = await this.prisma.patient.findUnique({
       where: { id },
-      include: { user: { select: { id: true, email: true, firstName: true, lastName: true, phone: true, lastLoginAt: true } } },
+      include: { 
+        user: { select: { id: true, email: true, firstName: true, lastName: true, phone: true, lastLoginAt: true } },
+        contactEmails: true
+      },
     });
     if (!patient) throw new NotFoundException('Patient not found');
     return patient;
@@ -52,7 +58,10 @@ export class PatientsService {
   async findByUserId(userId: string) {
     const patient = await this.prisma.patient.findUnique({
       where: { userId },
-      include: { user: { select: { id: true, email: true, firstName: true, lastName: true, phone: true } } },
+      include: { 
+        user: { select: { id: true, email: true, firstName: true, lastName: true, phone: true } },
+        contactEmails: true
+      },
     });
     if (!patient) throw new NotFoundException('Patient profile not found');
     return patient;

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinova Dashboard | Precision Health</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        @import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,900&f[]=satoshi@400,500,700&display=swap');
+
+        :root {
+            --clinova-dark: #0F1419;
+            --clinova-dark-alt: #161B22;
+            --clinova-cyan: #00D4FF;
+            --clinova-purple: #7C3AED;
+        }
+
+        body {
+            font-family: 'Satoshi', sans-serif;
+            background-color: var(--clinova-dark);
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .display-font {
+            font-family: 'Cabinet Grotesk', sans-serif;
+        }
+
+        .accent-gradient {
+            background: linear-gradient(135deg, var(--clinova-cyan) 0%, var(--clinova-purple) 100%);
+        }
+
+        .card-bg {
+            background-color: var(--clinova-dark-alt);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2D3748;
+            border-radius: 10px;
+        }
+
+        .vitals-chart {
+            height: 180px;
+            background-image: linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-active::after {
+            content: '';
+            position: absolute;
+            bottom: -28px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--clinova-cyan);
+            box-shadow: 0 0 10px var(--clinova-cyan);
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+        }
+    </style>
+  <style>sd-component { display: block; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Standardized Top Header (Sticky) -->
+        <header class="sticky top-0 z-50 bg-[#0F1419]/90 backdrop-blur-xl border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="flex items-center gap-12">
+                    <!-- component: HeaderNavBar (161af611-6ed2-4878-abc8-89d77c9bd899) -->
+<div v-scope="{ ...{&quot;homeHref&quot;:&quot;https://draft-769d1bc4-d07e-4881-962b-43b944e66c2a.preview.superdesign.dev&quot;}, $emit() {} }">
+<a :href="homeHref" class="flex items-center gap-3 no-underline group"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #00D4FF 0%, #7C3AED 100%)"><iconify-icon icon="lucide:stethoscope" class="text-white text-2xl"></iconify-icon></div><span class="text-2xl font-bold tracking-tight text-white" style="font-family: 'Cabinet Grotesk', sans-serif;">CLINOVA</span></a>
+</div>
+<!-- /component: HeaderNavBar (161af611-6ed2-4878-abc8-89d77c9bd899) -->
+
+                    <nav class="hidden lg:flex items-center gap-8 h-20">
+                        <a href="https://draft-769d1bc4-d07e-4881-962b-43b944e66c2a.preview.superdesign.dev" id="nav-dashboard-link" class="text-sm font-bold tracking-widest text-white transition-colors uppercase h-full flex items-center nav-link nav-link-active">Dashboard</a>
+                        <a href="https://draft-1e5a2020-10e1-4742-a46f-6b21c38941c7.preview.superdesign.dev" id="nav-ai-chat-link" class="text-sm font-bold tracking-widest text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">AI Chat</a>
+                        <a href="https://draft-80cf8093-30ee-431c-8922-709458863a16.preview.superdesign.dev" id="nav-voice-link" class="text-sm font-bold tracking-widest text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">Voice</a>
+                        <a href="https://draft-e9367cb3-2281-4fd2-9c88-8a1a23261a6d.preview.superdesign.dev" id="nav-audit-logs-link" class="text-sm font-bold tracking-widest text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">Audit Logs</a>
+                        <a href="https://draft-f158600d-8fbb-45a7-95c0-bc6bf9e2928d.preview.superdesign.dev" id="nav-patients-link" class="text-sm font-bold tracking-widest text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">Patients</a>
+                        <a href="https://draft-4b3e9770-2a85-40e4-82e6-922147a2e079.preview.superdesign.dev" id="nav-records-link" class="text-sm font-bold tracking-widest text-slate-400 hover:text-white transition-colors uppercase h-full flex items-center nav-link">Records</a>
+                    </nav>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <button id="header-search-btn" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/5 transition-all text-slate-400 hover:text-white">
+                        <iconify-icon icon="lucide:search" class="text-xl"></iconify-icon>
+                    </button>
+                    <button id="header-notif-btn" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/5 transition-all text-slate-400 hover:text-white relative">
+                        <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+                        <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-[#0F1419]"></span>
+                    </button>
+                    <div class="flex items-center gap-3 pl-6 border-l border-white/10">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-bold">Dr. S. Johnson</p>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Cardiologist</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl accent-gradient p-[1px]">
+                            <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=100" alt="Profile" class="w-full h-full rounded-[11px] bg-[#0F1419] object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 bg-[#0F1419] flex flex-col">
+            <!-- Dashboard Content -->
+            <div class="p-8 max-w-7xl mx-auto w-full">
+                <!-- Hero Welcome Section -->
+                <section class="mb-10">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div>
+                            <span class="text-xs font-bold text-cyan-400 uppercase tracking-[0.2em] mb-2 block">Clinical Intelligence</span>
+                            <h1 class="text-4xl md:text-5xl display-font font-black tracking-tight mb-2">
+                                TODAY'S <span class="text-transparent bg-clip-text accent-gradient">OVERVIEW</span>
+                            </h1>
+                            <p class="text-slate-400">Monitor real-time patient status and clinical alerts for your ward.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button class="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-sm font-bold hover:bg-white/10 transition-all">
+                                <iconify-icon icon="lucide:calendar"></iconify-icon>
+                                Oct 24, 2024
+                            </button>
+                            <button class="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-sm font-bold hover:bg-white/10 transition-all">
+                                <iconify-icon icon="lucide:filter"></iconify-icon>
+                                Filter Ward 4
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Metric Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                        <div class="card-bg p-8 rounded-3xl relative overflow-hidden group hover:scale-[1.02] transition-all">
+                            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                <iconify-icon icon="lucide:users" class="text-9xl"></iconify-icon>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 mb-6">
+                                    <iconify-icon icon="lucide:users" class="text-2xl"></iconify-icon>
+                                </div>
+                                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Patients Today</p>
+                                <h3 class="text-5xl display-font font-black">24</h3>
+                                <p class="mt-4 text-xs font-bold text-emerald-400 flex items-center gap-1">
+                                    <iconify-icon icon="lucide:trending-up"></iconify-icon>
+                                    +12% vs yesterday
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card-bg p-8 rounded-3xl relative overflow-hidden group hover:scale-[1.02] transition-all">
+                            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                <iconify-icon icon="lucide:check-circle" class="text-9xl"></iconify-icon>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-6">
+                                    <iconify-icon icon="lucide:clipboard-list" class="text-2xl"></iconify-icon>
+                                </div>
+                                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Pending Tasks</p>
+                                <h3 class="text-5xl display-font font-black">08</h3>
+                                <p class="mt-4 text-xs font-bold text-slate-500 flex items-center gap-1">
+                                    Next: Rounds at 2:00 PM
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card-bg p-8 rounded-3xl relative overflow-hidden group hover:scale-[1.02] transition-all border-red-500/20">
+                            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                <iconify-icon icon="lucide:alert-triangle" class="text-9xl"></iconify-icon>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-400 mb-6 glow-cyan">
+                                    <iconify-icon icon="lucide:alert-octagon" class="text-2xl"></iconify-icon>
+                                </div>
+                                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Critical Alerts</p>
+                                <h3 class="text-5xl display-font font-black text-red-500">02</h3>
+                                <p class="mt-4 text-xs font-bold text-red-400/80 flex items-center gap-2">
+                                    <span class="flex h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                                    Immediate attention required
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Secondary Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <section class="lg:col-span-2 space-y-8">
+                        <div class="card-bg rounded-3xl p-8">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h4 class="text-xl font-bold display-font">Ward Vitals Trends</h4>
+                                    <p class="text-sm text-slate-500">Real-time aggregate data for Ward 4A</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="px-3 py-1 bg-white/10 rounded-lg text-xs font-bold">1H</button>
+                                    <button class="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-lg text-xs font-bold">24H</button>
+                                    <button class="px-3 py-1 bg-white/10 rounded-lg text-xs font-bold">7D</button>
+                                </div>
+                            </div>
+                            <div class="vitals-chart relative flex flex-col justify-end">
+                                <svg class="absolute inset-0 w-full h-full text-cyan-400/30" preserveAspectRatio="none">
+                                    <path d="M0 80 Q 50 20, 100 80 T 200 80 T 300 120 T 400 40 T 500 80 T 600 60 T 700 90 T 800 50" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" />
+                                </svg>
+                                <svg class="absolute inset-0 w-full h-full text-cyan-400" preserveAspectRatio="none">
+                                    <path d="M0 100 Q 50 120, 100 80 T 200 60 T 300 90 T 400 30 T 500 110 T 600 50 T 700 80 T 800 60" fill="none" stroke="currentColor" stroke-width="3" class="drop-shadow-[0_0_10px_rgba(0,212,255,0.8)]" />
+                                </svg>
+                                <div class="flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-widest mt-4">
+                                    <span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span><span>00:00</span><span>04:00</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-white/5">
+                                <div class="text-center">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Avg Heart Rate</p>
+                                    <p class="text-xl font-bold">72 <span class="text-xs text-slate-500">bpm</span></p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Avg Blood pressure</p>
+                                    <p class="text-xl font-bold">118/79 <span class="text-xs text-slate-500">mmHg</span></p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Avg O2 Sat</p>
+                                    <p class="text-xl font-bold">98.4 <span class="text-xs text-slate-500">%</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-bg rounded-3xl overflow-hidden">
+                            <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                                <h4 class="text-lg font-bold display-font">Patient Status</h4>
+                                <a href="https://draft-f158600d-8fbb-45a7-95c0-bc6bf9e2928d.preview.superdesign.dev" id="view-all-patients-link" class="text-xs text-cyan-400 font-bold hover:underline">View All Patients</a>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead class="bg-white/5 text-[10px] uppercase font-bold tracking-widest text-slate-500">
+                                        <tr><th class="px-6 py-4">Patient</th><th class="px-6 py-4">Status</th><th class="px-6 py-4">Ward</th><th class="px-6 py-4">Vitals</th><th class="px-6 py-4 text-right">Action</th></tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-white/5">
+                                        <tr class="hover:bg-white/5 transition-colors group">
+                                            <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs">JD</div><div><p class="text-sm font-bold">John Doe</p><p class="text-[10px] text-slate-500 uppercase">ID: #6721</p></div></div></td>
+                                            <td class="px-6 py-4"><span class="px-2 py-1 rounded text-[10px] font-black uppercase bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Stable</span></td>
+                                            <td class="px-6 py-4 text-xs font-medium text-slate-400">A-402</td>
+                                            <td class="px-6 py-4"><div class="flex items-center gap-1 text-xs font-bold"><iconify-icon icon="lucide:heart" class="text-red-500"></iconify-icon><span>72</span></div></td>
+                                            <td class="px-6 py-4 text-right"><button class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 group-hover:bg-cyan-500 group-hover:text-white transition-all"><iconify-icon icon="lucide:chevron-right"></iconify-icon></button></td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors group">
+                                            <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs text-cyan-400">MJ</div><div><p class="text-sm font-bold">Maria Jones</p><p class="text-[10px] text-slate-500 uppercase">ID: #5512</p></div></div></td>
+                                            <td class="px-6 py-4"><span class="px-2 py-1 rounded text-[10px] font-black uppercase bg-red-500/10 text-red-500 border border-red-500/20">Critical</span></td>
+                                            <td class="px-6 py-4 text-xs font-medium text-slate-400">B-201</td>
+                                            <td class="px-6 py-4"><div class="flex items-center gap-1 text-xs font-bold"><iconify-icon icon="lucide:heart" class="text-red-500 animate-pulse"></iconify-icon><span class="text-red-500">112</span></div></td>
+                                            <td class="px-6 py-4 text-right"><button class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 group-hover:bg-cyan-500 group-hover:text-white transition-all"><iconify-icon icon="lucide:chevron-right"></iconify-icon></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <aside class="space-y-8">
+                        <div class="card-bg rounded-3xl p-6">
+                            <div class="flex items-center gap-2 mb-6">
+                                <iconify-icon icon="lucide:alert-triangle" class="text-red-500 text-lg"></iconify-icon>
+                                <h4 class="text-lg font-bold display-font">System Alerts</h4>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="p-4 rounded-2xl bg-red-500/5 border border-red-500/10">
+                                    <div class="flex justify-between items-start mb-1"><p class="text-[10px] font-black uppercase text-red-500">Critical</p><p class="text-[10px] text-slate-600 font-bold">2m ago</p></div>
+                                    <p class="text-sm font-bold">Maria Jones (B-201)</p><p class="text-xs text-slate-400 mt-1">Sudden heart rate spike detected by wearable monitor.</p>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-orange-500/5 border border-orange-500/10">
+                                    <div class="flex justify-between items-start mb-1"><p class="text-[10px] font-black uppercase text-orange-500">Warning</p><p class="text-[10px] text-slate-600 font-bold">15m ago</p></div>
+                                    <p class="text-sm font-bold">Pharmacy Sync</p><p class="text-xs text-slate-400 mt-1">Inventory low for Insulin Aspart in Ward 4 storage.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-bg rounded-3xl p-6">
+                            <h4 class="text-lg font-bold display-font mb-6">Recent Activity</h4>
+                            <div class="space-y-6">
+                                <div class="flex gap-4">
+                                    <div class="relative"><div class="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400"><iconify-icon icon="lucide:file-plus"></iconify-icon></div><div class="absolute top-8 left-4 w-[2px] h-8 bg-white/5"></div></div>
+                                    <div><p class="text-sm font-bold">Record Added</p><p class="text-xs text-slate-500">Patient #6721: Lab results uploaded</p><p class="text-[10px] text-slate-600 mt-1 uppercase font-bold">09:24 AM</p></div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="relative"><div class="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400"><iconify-icon icon="lucide:message-square"></iconify-icon></div><div class="absolute top-8 left-4 w-[2px] h-8 bg-white/5"></div></div>
+                                    <div><p class="text-sm font-bold">AI Analysis Complete</p><p class="text-xs text-slate-500">M. Jones: Symptom mapping done</p><p class="text-[10px] text-slate-600 mt-1 uppercase font-bold">08:45 AM</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="emergency-code-btn" class="w-full py-6 rounded-3xl bg-red-600 text-white flex flex-col items-center justify-center gap-2 hover:bg-red-500 transition-all active:scale-[0.98] shadow-2xl shadow-red-900/40">
+                            <iconify-icon icon="lucide:megaphone" class="text-3xl"></iconify-icon>
+                            <span class="text-sm font-black uppercase tracking-[0.2em]">Emergency Code</span>
+                        </button>
+                    </aside>
+                </div>
+            </div>
+
+            <!-- Dashboard Footer -->
+            <footer class="mt-auto border-t border-white/5 bg-[#0F1419] p-8">
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 accent-gradient rounded flex items-center justify-center"><iconify-icon icon="lucide:stethoscope" class="text-white text-xs"></iconify-icon></div>
+                        <span class="text-sm font-bold display-font tracking-tight">CLINOVA OS v2.4</span>
+                    </div>
+                    <nav class="flex flex-wrap justify-center gap-8 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        <a href="#" id="support-link" class="hover:text-white transition-colors">Support Center</a>
+                        <a href="#" id="status-link" class="hover:text-white transition-colors">System Status</a>
+                        <a href="#" id="privacy-link" class="hover:text-white transition-colors">HIPAA Privacy</a>
+                        <a href="#" id="release-link" class="hover:text-white transition-colors">Release Notes</a>
+                    </nav>
+                    <p class="text-[10px] text-slate-600 font-bold uppercase tracking-widest">© 2024 Clinova Health Inc.</p>
+                </div>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

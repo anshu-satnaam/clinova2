@@ -55,6 +55,14 @@ export class AuthController {
     return this.authService.getMe(req.user.sub);
   }
 
+  @Post('profile')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update own user profile' })
+  async updateProfile(@Request() req, @Body() body: any) {
+    return this.authService.updateProfile(req.user.sub, body);
+  }
+
   @Post('consent')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

@@ -2,12 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { AuditLogInterceptor } from './audit/audit-log.interceptor';
+import { PrismaService } from './prisma/prisma.service';
 import helmet from 'helmet';
 import * as compression from 'compression';
 import * as morgan from 'morgan';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  
+  const prismaService = app.get(PrismaService);
+  app.useGlobalInterceptors(new AuditLogInterceptor(prismaService));
 
   // ── Security ──────────────────────────────────────────────
   app.use(helmet());
@@ -16,9 +21,15 @@ async function bootstrap() {
 
   // ── CORS ─────────────────────────────────────────────────
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3001',
+    origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, 'http://localhost:3001', 'http://localhost:3000'] : true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
+  });
+
+  // ── Health endpoint for Docker ────────────────────────────
+  const httpAdapter = app.getHttpAdapter();
+  httpAdapter.get('/health', (_req: any, res: any) => {
+    res.json({ status: 'healthy', service: 'clinova-gateway', version: '1.0.0', timestamp: new Date().toISOString() });
   });
 
   // ── Global Validation ─────────────────────────────────────
