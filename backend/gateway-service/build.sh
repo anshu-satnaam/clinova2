@@ -15,7 +15,15 @@ echo "🌱 Seeding database..."
 npx ts-node prisma/seed.ts
 
 echo "🏗️ Building NestJS application..."
-# Force npx to use the @nestjs/cli package specifically
 npx -p @nestjs/cli nest build
+
+echo "🔍 Verifying build output..."
+if [ -d "dist" ]; then
+  echo "✅ dist folder found"
+  find dist -maxdepth 2
+else
+  echo "❌ dist folder NOT found"
+  exit 1
+fi
 
 echo "✅ Build complete!"
