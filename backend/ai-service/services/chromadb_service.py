@@ -4,7 +4,6 @@ Vector embeddings for patient notes, clinical guidelines, AI memory
 """
 import chromadb
 from chromadb.config import Settings
-from sentence_transformers import SentenceTransformer
 from typing import Optional, List, Dict, Any
 import os, structlog
 
