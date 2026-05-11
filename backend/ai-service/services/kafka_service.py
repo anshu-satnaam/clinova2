@@ -17,6 +17,7 @@ class KafkaService:
     async def initialize(cls):
         """Initialize Kafka producer with Upstash SSL config."""
         try:
+            # Use a short timeout for the producer creation
             cls._producer = KafkaProducer(
                 bootstrap_servers=os.getenv("KAFKA_BROKER_URL", "localhost:9092"),
                 security_protocol="SASL_SSL",
@@ -26,7 +27,8 @@ class KafkaService:
                 value_serializer=lambda v: json.dumps(v).encode("utf-8"),
                 key_serializer=lambda k: k.encode("utf-8") if k else None,
                 acks="all",
-                retries=3,
+                retries=1,
+                request_timeout_ms=5000,
             )
             logger.info("kafka_producer_initialized")
         except Exception as e:

@@ -2,7 +2,8 @@
 Clinova AI Service — FastAPI
 LangGraph + Mistral powered clinical AI workflows
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import structlog
@@ -60,6 +61,15 @@ app.include_router(workflow.router,  prefix="/api/ai", tags=["workflow"])
 @app.get("/health", tags=["health"])
 async def health():
     return {"status": "healthy", "service": "clinova-ai-service", "version": "1.0.0"}
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    logger.error("global_error", error=str(exc), path=request.url.path)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"AI Service Internal Error: {str(exc)}"},
+    )
 
 
 if __name__ == "__main__":

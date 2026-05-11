@@ -17,6 +17,7 @@ const chartData = [
 ];
 
 export default function Dashboard() {
+  const [mounted, setMounted] = useState(false);
   const [stats, setStats] = useState({
     totalPatients: 0,
     activeSessions: 12, // Mocked for now
@@ -30,6 +31,7 @@ export default function Dashboard() {
   const [timeframe, setTimeframe] = useState('Daily');
 
   useEffect(() => {
+    setMounted(true);
     fetchDashboardData();
     // Load appointments from localStorage
     setAppointments(getAppointments().filter(a => a.status === 'scheduled'));
@@ -139,31 +141,33 @@ export default function Dashboard() {
               </div>
 
               <div className="h-[300px] w-full relative">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                    <XAxis dataKey="time" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: 'rgba(15, 20, 25, 0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                      itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
-                      labelStyle={{ fontSize: '10px', color: '#94a3b8', marginBottom: '4px' }}
-                    />
-                    
-                    {(graphMetric === 'HR' || graphMetric === 'Combined') && (
-                      <Line type="monotone" dataKey="maria" name="Maria Jones (HR)" stroke="#06b6d4" strokeWidth={3} dot={{ r: 4, fill: '#0F1419', strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                    )}
-                    {(graphMetric === 'BP' || graphMetric === 'Combined') && (
-                      <Line type="monotone" dataKey="raj" name="Raj Kumar (BP)" stroke="#f97316" strokeWidth={3} dot={{ r: 4, fill: '#0F1419', strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                    )}
-                    {(graphMetric === 'Sugar' || graphMetric === 'Combined') && (
-                      <Line type="monotone" dataKey="singh" name="A. Singh (Sugar)" stroke="#a855f7" strokeWidth={3} dot={{ r: 4, fill: '#0F1419', strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                    )}
-                    {(graphMetric === 'O2' || graphMetric === 'Combined') && (
-                      <Line type="monotone" dataKey="mariaO2" name="Maria Jones (O2)" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#0F1419', strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                    )}
-                  </LineChart>
-                </ResponsiveContainer>
+                {mounted && (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                      <XAxis dataKey="time" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: 'rgba(15, 20, 25, 0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                        itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+                        labelStyle={{ fontSize: '10px', color: '#94a3b8', marginBottom: '4px' }}
+                      />
+                      
+                      {(graphMetric === 'HR' || graphMetric === 'Combined') && (
+                        <Line type="monotone" dataKey="maria" name="Maria Jones (HR)" stroke="#06b6d4" strokeWidth={3} dot={{ r: 4, fill: '#0F1419', strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                      )}
+                      {(graphMetric === 'BP' || graphMetric === 'Combined') && (
+                        <Line type="monotone" dataKey="raj" name="Raj Kumar (BP)" stroke="#f97316" strokeWidth={3} dot={{ r: 4, fill: '#0F1419', strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                      )}
+                      {(graphMetric === 'Sugar' || graphMetric === 'Combined') && (
+                        <Line type="monotone" dataKey="singh" name="A. Singh (Sugar)" stroke="#a855f7" strokeWidth={3} dot={{ r: 4, fill: '#0F1419', strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                      )}
+                      {(graphMetric === 'O2' || graphMetric === 'Combined') && (
+                        <Line type="monotone" dataKey="mariaO2" name="Maria Jones (O2)" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#0F1419', strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                      )}
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             </div>
 
@@ -174,37 +178,39 @@ export default function Dashboard() {
                 <button className="text-xs font-black text-cyan-400 uppercase tracking-widest hover:text-cyan-300 transition-colors">View Schedule →</button>
               </div>
               <div className="space-y-4">
-                {appointments.length === 0 ? (
-                  <div className="text-center py-8 text-slate-600">
-                    <p className="text-sm italic">No upcoming appointments.</p>
-                    <p className="text-xs mt-1">Schedule one from the Patients page.</p>
-                  </div>
-                ) : appointments.slice(0,5).map((appt) => {
-                  const typeColors: Record<string,string> = {
-                    critical:'bg-red-500/10 text-red-400 border-red-500/20',
-                    urgent:'bg-orange-500/10 text-orange-400 border-orange-500/20',
-                    routine:'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-                    'follow-up':'bg-purple-500/10 text-purple-400 border-purple-500/20',
-                  };
-                  const d = new Date(appt.scheduledAt);
-                  return (
-                    <div key={appt.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-white/20 transition-all">
-                      <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center">
-                          <span className="text-[10px] font-black text-slate-500 uppercase">{d.toLocaleDateString('en',{month:'short'})}</span>
-                          <span className="text-lg font-black text-white leading-none">{d.getDate()}</span>
-                          <span className="text-[9px] text-cyan-400 font-black">{d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
-                        </div>
-                        <div>
-                          <p className="font-bold text-white">{appt.patientName}</p>
-                          <p className="text-[10px] text-cyan-400 font-bold mt-0.5">Dr. Satnaam Singh Gandhi</p>
-                          <p className="text-[10px] text-slate-500 font-bold mt-0.5">{appt.notes || 'Scheduled Appointment'}</p>
-                        </div>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${typeColors[appt.type] || typeColors.routine}`}>{appt.type}</span>
+                {mounted && (
+                  appointments.length === 0 ? (
+                    <div className="text-center py-8 text-slate-600">
+                      <p className="text-sm italic">No upcoming appointments.</p>
+                      <p className="text-xs mt-1">Schedule one from the Patients page.</p>
                     </div>
-                  );
-                })}
+                  ) : appointments.slice(0,5).map((appt) => {
+                    const typeColors: Record<string,string> = {
+                      critical:'bg-red-500/10 text-red-400 border-red-500/20',
+                      urgent:'bg-orange-500/10 text-orange-400 border-orange-500/20',
+                      routine:'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+                      'follow-up':'bg-purple-500/10 text-purple-400 border-purple-500/20',
+                    };
+                    const d = new Date(appt.scheduledAt);
+                    return (
+                      <div key={appt.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-white/20 transition-all">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center">
+                            <span className="text-[10px] font-black text-slate-500 uppercase">{d.toLocaleDateString('en',{month:'short'})}</span>
+                            <span className="text-lg font-black text-white leading-none">{d.getDate()}</span>
+                            <span className="text-[9px] text-cyan-400 font-black">{d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+                          </div>
+                          <div>
+                            <p className="font-bold text-white">{appt.patientName}</p>
+                            <p className="text-[10px] text-cyan-400 font-bold mt-0.5">Dr. Satnaam Singh Gandhi</p>
+                            <p className="text-[10px] text-slate-500 font-bold mt-0.5">{appt.notes || 'Scheduled Appointment'}</p>
+                          </div>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${typeColors[appt.type] || typeColors.routine}`}>{appt.type}</span>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           </div>
@@ -225,7 +231,7 @@ export default function Dashboard() {
             <div className="glass-card rounded-3xl p-8">
               <h3 className="text-lg font-bold mb-6">Recent Activity</h3>
               <div className="space-y-6">
-                {activities.map((act, i) => (
+                {mounted && activities.map((act, i) => (
                   <div key={i} className="flex gap-4 group">
                     <div className="relative">
                       <div className={`w-3 h-3 rounded-full mt-1.5 z-10 relative ${act.action === 'LOGIN' ? 'bg-emerald-500' : 'bg-cyan-500'}`} />

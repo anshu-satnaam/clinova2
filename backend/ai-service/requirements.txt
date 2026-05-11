@@ -1,40 +1,39 @@
-# AI Service requirements
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-pydantic==2.5.3
-pydantic-settings==2.1.0
-python-dotenv==1.0.0
+# AI Service core requirements
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+pydantic==2.10.4
+pydantic-settings==2.7.0
+python-dotenv==1.0.1
 
-# LangGraph + LLM
-langgraph
-langchain
-langchain-mistralai
-mistralai
+# LangGraph + LLM (Pinned to stable versions)
+langgraph==0.2.14
+langchain==0.2.11
+langchain-community==0.2.10
+langchain-mistralai==0.1.10
+mistralai==1.1.0
 
 # Database
-asyncpg==0.29.0
-sqlalchemy[asyncio]==2.0.25
-alembic==1.13.1
+asyncpg==0.30.0
+sqlalchemy[asyncio]==2.0.36
+alembic==1.14.0
 
-# ChromaDB (Vector DB)
-chromadb==0.4.22
-sentence-transformers==2.3.1
+# Vector DB
+chromadb==0.5.23
+sentence-transformers==3.3.1
 
-# Kafka (Upstash)
+# Messaging
 kafka-python==2.0.2
-confluent-kafka==2.3.0
+confluent-kafka==2.6.1
 
-# HTTP Client
-httpx==0.26.0
-aiohttp==3.9.1
-
-# Security
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
-cryptography==41.0.7
+# HTTP
+httpx==0.28.1
+aiohttp==3.11.10
 
 # Utilities
-python-multipart==0.0.6
-orjson==3.9.10
-structlog==24.1.0
-prometheus-fastapi-instrumentator==6.1.0
+python-multipart==0.0.19
+orjson==3.10.12
+structlog==24.4.0
+prometheus-fastapi-instrumentator==7.0.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+cryptography==43.0.3

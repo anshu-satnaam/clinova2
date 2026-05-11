@@ -31,6 +31,7 @@ const EMPTY_FORM: NewPatientForm = {
 
 export default function PatientsPage() {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -52,7 +53,10 @@ export default function PatientsPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { fetchPatients(); }, []);
+  useEffect(() => { 
+    setMounted(true);
+    fetchPatients(); 
+  }, []);
 
   const fetchPatients = async () => {
     setLoading(true);

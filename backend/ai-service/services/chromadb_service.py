@@ -35,7 +35,9 @@ class ChromaService:
                 )
             logger.info("chromadb_initialized", collections=cls.COLLECTIONS)
         except Exception as e:
-            logger.error("chromadb_init_failed", error=str(e))
+            logger.error("chromadb_init_failed_skipping", error=str(e))
+            cls._client = None
+            cls._collections = {}
 
     @classmethod
     async def embed_and_store(
@@ -46,8 +48,8 @@ class ChromaService:
         metadata: Optional[Dict] = None,
     ) -> bool:
         """Embed text and store in ChromaDB collection."""
-        if collection not in cls._collections:
-            logger.error("unknown_collection", collection=collection)
+        if not cls._client or collection not in cls._collections:
+            logger.warning("chromadb_not_available_skipping_store", collection=collection)
             return False
         try:
             embedding = cls._embedder.encode(text).tolist()
