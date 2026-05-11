@@ -11,9 +11,12 @@ export class PatientsService {
   ) {}
 
   private get fhirUrl() {
-    let url = this.config.get('FHIR_SERVICE_URL') || 'http://clinova-fhir:8002';
+    let url = this.config.get('FHIR_SERVICE_URL') || 'http://clinova-fhir:10000';
     if (url && !url.startsWith('http')) {
       url = `http://${url}`;
+    }
+    if (url && !url.includes(':', 6)) { 
+      url = `${url}:10000`;
     }
     return url;
   }

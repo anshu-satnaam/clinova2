@@ -7,9 +7,12 @@ export class VoiceService {
   constructor(private config: ConfigService) {}
 
   private get voiceUrl() {
-    let url = this.config.get('VOICE_SERVICE_URL') || 'http://clinova-voice:8003';
+    let url = this.config.get('VOICE_SERVICE_URL') || 'http://clinova-voice:10000';
     if (url && !url.startsWith('http')) {
       url = `http://${url}`;
+    }
+    if (url && !url.includes(':', 6)) { 
+      url = `${url}:10000`;
     }
     return url;
   }

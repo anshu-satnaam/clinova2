@@ -11,9 +11,13 @@ export class AiService {
   ) {}
 
   private get aiServiceUrl() {
-    let url = this.config.get('AI_SERVICE_URL') || 'http://clinova-ai:8001';
+    let url = this.config.get('AI_SERVICE_URL') || 'http://clinova-ai:10000';
     if (url && !url.startsWith('http')) {
       url = `http://${url}`;
+    }
+    // Render internal hostnames don't include the port, but services listen on 10000
+    if (url && !url.includes(':', 6)) { 
+      url = `${url}:10000`;
     }
     return url;
   }
