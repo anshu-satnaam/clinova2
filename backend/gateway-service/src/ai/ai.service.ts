@@ -11,13 +11,25 @@ export class AiService {
   ) {}
 
   private get aiServiceUrl() {
-    let url = this.config.get('AI_SERVICE_URL') || 'http://clinova-ai:10000';
+    let url = this.config.get('AI_SERVICE_URL') || 'https://clinova-ai.onrender.com';
     if (url && !url.startsWith('http')) {
-      url = `http://${url}`;
+      url = url.includes('onrender.com') ? `https://${url}` : `http://${url}:10000`;
     }
-    // Render internal hostnames don't include the port, but services listen on 10000
-    if (url && !url.includes(':', 6)) { 
-      url = `${url}:10000`;
+    return url;
+  }
+
+  private get fhirUrl() {
+    let url = this.config.get('FHIR_SERVICE_URL') || 'https://clinova-fhir.onrender.com';
+    if (url && !url.startsWith('http')) {
+      url = url.includes('onrender.com') ? `https://${url}` : `http://${url}:10000`;
+    }
+    return url;
+  }
+
+  private get voiceUrl() {
+    let url = this.config.get('VOICE_SERVICE_URL') || 'https://clinova-voice.onrender.com';
+    if (url && !url.startsWith('http')) {
+      url = url.includes('onrender.com') ? `https://${url}` : `http://${url}:10000`;
     }
     return url;
   }

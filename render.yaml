@@ -1,5 +1,7 @@
 # ════════════════════════════════════════════════════════════════
-#  CLINOVA — Render Blueprint (Production Stack)
+#  CLINOVA — Render Blueprint (Free Tier - Public URL Communication)
+#  NOTE: Render Free tier has NO private networking.
+#  All inter-service communication uses public HTTPS URLs.
 # ════════════════════════════════════════════════════════════════
 
 services:
@@ -10,11 +12,6 @@ services:
     region: ohio
     plan: free
     rootDir: backend/chroma-service
-    envVars:
-      - key: CHROMA_SERVER_HOST
-        value: 0.0.0.0
-      - key: ALLOW_RESET
-        value: "TRUE"
 
   # 2. AI Service (FastAPI + Mistral)
   - type: web
@@ -30,12 +27,11 @@ services:
       - key: PYTHON_VERSION
         value: 3.10.12
       - key: CHROMA_HOST
-        fromService:
-          type: web
-          name: clinova-chroma
-          property: host
+        value: clinova-chroma.onrender.com
       - key: CHROMA_PORT
-        value: "10000"
+        value: "443"
+      - key: CHROMA_SSL
+        value: "true"
       - key: MISTRAL_API_KEY
         sync: false
       - key: DATABASE_URL
@@ -87,15 +83,9 @@ services:
       - key: PYTHON_VERSION
         value: 3.10.12
       - key: AI_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-ai
-          property: host
+        value: https://clinova-ai.onrender.com
       - key: FHIR_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-fhir
-          property: host
+        value: https://clinova-fhir.onrender.com
       - key: LIVEKIT_API_KEY
         sync: false
       - key: LIVEKIT_API_SECRET
@@ -128,25 +118,13 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: AI_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-ai
-          property: host
+        value: https://clinova-ai.onrender.com
       - key: FHIR_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-fhir
-          property: host
+        value: https://clinova-fhir.onrender.com
       - key: VOICE_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-voice
-          property: host
+        value: https://clinova-voice.onrender.com
       - key: AUDIT_SERVICE_URL
-        fromService:
-          type: web
-          name: clinova-audit
-          property: host
+        value: https://clinova-audit.onrender.com
 
   # 7. Frontend (Next.js)
   - type: web
