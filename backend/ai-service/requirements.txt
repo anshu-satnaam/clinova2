@@ -1,5 +1,6 @@
-# Clinova AI Service — Ultra-Light (CPU/Free-Tier Optimized)
---extra-index-url https://download.pytorch.org/whl/cpu
+# Clinova AI Service — Production (Free Tier Optimized)
+# NOTE: Removed PyTorch extra-index-url since torch/sentence-transformers are no longer used.
+# This fixes pip resolution failures for mistralai on Render.
 
 fastapi
 uvicorn[standard]
@@ -11,19 +12,19 @@ python-dotenv
 langgraph
 langchain
 langchain-mistralai
-mistralai
+mistralai>=1.0.0
 
-# Database & Vector (Ultra Light)
+# Database & Vector
 asyncpg
 sqlalchemy[asyncio]
 chromadb
-# Removed heavy sentence-transformers/torch for free tier compatibility
-# We will use Mistral for embeddings instead of local sentence-transformers
 
 # Conflict Fixes
-tokenizers>=0.22.0,<=0.23.0
 protobuf<6.0
 httpx<0.28.0
+
+# Messaging (optional, gracefully skipped if unavailable)
+kafka-python
 
 # Utils
 python-multipart
