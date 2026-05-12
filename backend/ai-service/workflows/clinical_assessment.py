@@ -12,15 +12,9 @@ import os
 
 logger = structlog.get_logger()
 
-# Load .env explicitly
-try:
-    from dotenv import load_dotenv
-    import pathlib
-    env_path = pathlib.Path(__file__).parent.parent / '.env'
-    load_dotenv(dotenv_path=env_path, override=False)
-    logger.info("env_loaded", path=str(env_path))
-except Exception as e:
-    logger.warning("env_load_failed", error=str(e))
+# NOTE: Do NOT load .env here.
+# On Render, env vars are set in the Dashboard and must NOT be overridden by a local .env file.
+# The .env file contains localhost values (CHROMA_HOST=localhost) that break production.
 
 
 # ── State ─────────────────────────────────────────────────────────────────────
@@ -47,9 +41,10 @@ class ClinicalState(TypedDict):
 def get_llm():
     api_key = os.getenv("MISTRAL_API_KEY", "")
     if not api_key:
-        raise ValueError("MISTRAL_API_KEY is not set in the environment variables.")
+        logger.error("mistral_api_key_not_set", hint="Set MISTRAL_API_KEY in Render Dashboard for clinova-ai service")
+        raise ValueError("MISTRAL_API_KEY is not set. Add it to Render environment variables for clinova-ai.")
     model = os.getenv("MISTRAL_MODEL", "mistral-small-latest")
-    logger.info("llm_init", model=model, key_set=bool(api_key))
+    logger.info("llm_init", model=model, key_preview=api_key[:8] + "...")
     return ChatMistralAI(
         api_key=api_key,
         model=model,

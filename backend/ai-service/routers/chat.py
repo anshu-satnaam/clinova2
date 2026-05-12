@@ -8,12 +8,10 @@ from typing import Optional, List
 from uuid import uuid4
 import os
 import structlog
-from dotenv import load_dotenv
-import pathlib
 
-# Load env
-env_path = pathlib.Path(__file__).parent.parent / '.env'
-load_dotenv(dotenv_path=env_path, override=False)
+# NOTE: Do NOT call load_dotenv here.
+# On Render, env vars are injected directly. Loading .env would override them with stale local values.
+# load_dotenv is ONLY called in workflows/clinical_assessment.py as a fallback for local dev.
 
 from workflows.clinical_assessment import clinical_assessment_graph
 from services.chromadb_service import ChromaService
@@ -30,10 +28,11 @@ class ChatMessage(BaseModel):
 
 class ChatRequest(BaseModel):
     message: str = Field(..., min_length=1, max_length=10000)
-    patient_id: str
+    patient_id: Optional[str] = "unknown"   # Made optional so frontend doesn't need to send it
     session_id: Optional[str] = None
     history: Optional[List[ChatMessage]] = []
     context_type: str = Field(default="general", description="general | clinical | dictation")
+    userId: Optional[str] = None  # Passed by Gateway from JWT token
 
 
 class ChatResponse(BaseModel):
@@ -54,9 +53,10 @@ async def _generate_conversational_response(message: str, history: List[ChatMess
 
         api_key = os.getenv("MISTRAL_API_KEY", "")
         if not api_key:
-            return "AI Service Configuration Error: MISTRAL_API_KEY is missing. Please check Render environment variables."
+            logger.error("mistral_api_key_missing")
+            return "AI Configuration Error: MISTRAL_API_KEY is not set. Please add it to the Render environment variables for clinova-ai."
             
-        model = os.getenv("MISTRAL_MODEL", "mistral-medium-latest")
+        model = os.getenv("MISTRAL_MODEL", "mistral-small-latest")
         llm = ChatMistralAI(api_key=api_key, model=model, temperature=0.3)
 
         history_text = ""
@@ -71,7 +71,6 @@ CRITICAL RULES:
 1. DEFAULT LENGTH: Keep responses extremely concise (1-4 lines maximum) unless the doctor specifically asks for a detailed explanation.
 2. Directness: Do not use filler words. Be medically precise and fast.
 3. Fallbacks: If you don't know, state it quickly.
-4. Summary: If summarizing a record, strictly adhere to the 20-word limit.
 Always remind that AI suggestions require doctor verification if providing a diagnosis."""
 
         user_context = f"""Conversation history:{history_text if history_text else ' None'}
@@ -91,31 +90,26 @@ Provide a helpful, specific clinical response addressing the doctor's actual que
 
     except Exception as e:
         logger.error("response_generation_failed", error=str(e))
-        # Fallback: build structured response from entities
         return _build_fallback_response(entities, risk_level, message)
 
 
 def _build_fallback_response(entities: dict, risk_level: str, original_query: str) -> str:
     """Fallback response builder when LLM call fails."""
-    lines = []
-
-    # Detect greeting/casual messages
     greetings = ["hello", "hi", "hey", "good morning", "good evening", "thanks", "thank you"]
     msg_lower = original_query.lower().strip()
     if any(msg_lower.startswith(g) for g in greetings) or len(original_query.split()) < 4:
-        return f"Hello! I'm Clinova Clinical AI. How can I assist you with your clinical work today? You can ask me about patient assessments, differential diagnoses, ICD-10 codes, medication interactions, or FHIR documentation."
+        return "Hello! I'm Clinova Clinical AI. How can I assist you with your clinical work today?"
 
+    lines = []
     if entities.get("diagnoses"):
         lines.append(f"**Potential diagnoses:** {', '.join(entities['diagnoses'])}")
     if entities.get("symptoms"):
         lines.append(f"**Identified symptoms:** {', '.join(entities['symptoms'])}")
     if entities.get("medications"):
         lines.append(f"**Medications noted:** {', '.join(entities['medications'])}")
-    if entities.get("vitals"):
-        lines.append(f"**Vitals:** {entities['vitals']}")
 
     if not lines:
-        return "I've processed your message. Could you provide more clinical details so I can give you a thorough assessment? For example, mention symptoms, patient history, or specific clinical question."
+        return "I've processed your message. Could you provide more clinical details for a thorough assessment?"
 
     lines.append(f"\n**Clinical Risk Assessment:** {risk_level}")
     lines.append("⚠️ *All AI assessments require physician verification before clinical action.*")
@@ -129,19 +123,23 @@ async def chat(request: ChatRequest):
     Runs LangGraph workflow then generates a natural conversational response.
     """
     session_id = request.session_id or str(uuid4())
+    patient_id = request.patient_id or "unknown"
+
+    logger.info("chat_request_received", session_id=session_id, patient_id=patient_id,
+                mistral_key_set=bool(os.getenv("MISTRAL_API_KEY")))
 
     try:
-        # Fetch relevant patient context from ChromaDB
+        # Fetch relevant patient context from ChromaDB (non-blocking)
         context_docs = []
         try:
             context_docs = await ChromaService.search(
                 query=request.message,
                 collection="patient_notes",
                 n_results=3,
-                where={"patient_id": request.patient_id}
+                where={"patient_id": patient_id} if patient_id != "unknown" else None
             )
-        except Exception:
-            pass
+        except Exception as chroma_err:
+            logger.warning("chroma_search_skipped", error=str(chroma_err))
 
         # Build enriched input with context
         enriched_input = request.message
@@ -152,7 +150,7 @@ async def chat(request: ChatRequest):
         # Run LangGraph clinical analysis workflow
         result = await clinical_assessment_graph.ainvoke({
             "raw_input": enriched_input,
-            "patient_id": request.patient_id,
+            "patient_id": patient_id,
             "session_id": session_id,
         })
 
@@ -170,13 +168,12 @@ async def chat(request: ChatRequest):
             processed_text=processed_text,
         )
 
-        # Publish to Kafka (non-blocking)
+        # Publish to Kafka (non-blocking, fire-and-forget)
         try:
             await KafkaService.publish("diagnosis.generated", {
                 "session_id": session_id,
-                "patient_id": request.patient_id,
+                "patient_id": patient_id,
                 "risk_level": risk_level,
-                "requires_doctor_approval": final.get("requires_doctor_approval"),
             })
         except Exception:
             pass
@@ -192,8 +189,10 @@ async def chat(request: ChatRequest):
         )
 
     except Exception as e:
-        logger.error("chat_error", error=str(e), session_id=session_id)
-        # For debugging: return the actual error
+        logger.error("chat_error", error=str(e), session_id=session_id,
+                     mistral_key_set=bool(os.getenv("MISTRAL_API_KEY")),
+                     chroma_host=os.getenv("CHROMA_HOST"),
+                     chroma_port=os.getenv("CHROMA_PORT"))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"AI workflow failed: {str(e)}"
@@ -203,4 +202,4 @@ async def chat(request: ChatRequest):
 @router.get("/chat/session/{session_id}")
 async def get_session(session_id: str):
     """Retrieve a past AI session by ID."""
-    return {"session_id": session_id, "message": "Session retrieval via DB not yet implemented"}
+    return {"session_id": session_id, "message": "Session retrieval not yet implemented"}
